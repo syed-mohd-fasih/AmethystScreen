@@ -14,8 +14,27 @@
 
 <hr />
 
-@*
+<div class="main-body w-100 h-100">
+    <div class="row justify-content-around">
+        @if (Model.Any())
+        {
+            @foreach (var movie in Model)
+            {
+            <div class="col">
+                <div class="card card-hover-effect">
+                    <a asp-action="Movie" asp-route-id="@movie.Id">
+                        <img src="@movie.Image" class="card-img-top" alt="@movie.Title">
+                        <div class="card-body">
+                            <h4 class="card-title">@movie.Title</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            }
+        }
+    </div>
+</div>
+
 <div>
     <a asp-action="Index">Back to Library</a>
 </div>
-*@
