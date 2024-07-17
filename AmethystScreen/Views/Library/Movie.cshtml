@@ -1,0 +1,31 @@
+﻿@model AmethystScreen.Models.Movie
+
+<head>
+
+</head>
+
+<div class="card vh-100 vw-100">
+    <div class="row g-0">
+        <div class="col-4" id="media-container">
+            <img src="@Model.Image" class="movie-image-container" alt="@Model.Title" id="movie-thumbnail" />
+            <source src="/library/video/@Model.VideoUrl" type="video/mp4">
+            <source src="/library/video/@Model.VideoUrl" type="video/webm">
+            <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
+            <source src="/library/video/@Model.VideoUrl" type="video/quicktime">"
+            <source src="/library/video/@Model.VideoUrl" type="video/x-ms-wmv">
+            <source src="/library/video/@Model.VideoUrl" type="video/x-matroska">
+            <source src="/library/video/@Model.VideoUrl" type="video/mpeg">
+            Your browser does not support the video tag.
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card-body" id="description">
+            <p class="card-title">@Model.Title</p>
+            <p class="card-text mb-0"><small class="text-body-secondary">@Model.Year</small></p>
+            <p class="card-text"><small class="text-body-secondary">@Model.Language</small></p>
+            <p class="card-text">@String.Join(", ", Model.Tags)</p>
+            <p class="card-text">IMDB Rating: @Model.Rating</p>
+            <p class="card-text"><strong>Synopsis:</strong>@Model.Description</p>
+        </div>
+    </div>
+</div>

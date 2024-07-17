@@ -25,33 +25,27 @@ namespace AmethystScreen.Controllers
             return View(await _context.Movies.ToListAsync());
         }
 
-        // GET: Library/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Library/Movie
+        public async Task<IActionResult> Movie(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movies
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            if (MovieExists(id))
             {
-                return NotFound();
+                var movie = await _context.Movies.FirstOrDefaultAsync(x => x.Id == id);
+                return View(movie);
             }
-
-            return View(movie);
-        }
-
-        // GET: Library/Create
-        public IActionResult Create()
-        {
-            return View();
+            else
+            {
+                // Change for future custom error page
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Library/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Year,Title,Tags,Description,Image,Rating,VideoUrl,Language")] Movie movie)
@@ -65,25 +59,7 @@ namespace AmethystScreen.Controllers
             return View(movie);
         }
 
-        // GET: Library/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            return View(movie);
-        }
-
         // POST: Library/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Year,Title,Tags,Description,Image,Rating,VideoUrl,Language")] Movie movie)
@@ -114,39 +90,6 @@ namespace AmethystScreen.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
-        }
-
-        // GET: Library/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var movie = await _context.Movies
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            return View(movie);
-        }
-
-        // POST: Library/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie != null)
-            {
-                _context.Movies.Remove(movie);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool MovieExists(int id)
