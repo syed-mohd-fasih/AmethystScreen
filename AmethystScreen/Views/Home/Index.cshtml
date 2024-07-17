@@ -1,8 +1,49 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = null;
 }
+<!DOCTYPE html> 
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - AmethystScreen</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/AmethystScreen.styles.css" asp-append-version="true" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+VIC:wght@100..400&display=swap" rel="stylesheet">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+        <style>
+            .home-page-title {
+                display: flex;
+                font-size: 5rem;
+                letter-spacing: .2rem;
+                a {
+                    color: white;
+                    opacity: 0.5;
+                    transition: transform 0.3s ease, opacity 0.3s ease;
+                }
+            }
+            .home-page-title:hover {
+                a {
+                    color: blueviolet;
+                    opacity: 1;
+                    transform: scale(1.05);
+                    animation: 3s;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="dynamic-bg h-100 w-100">
+            <div class="prevent-select home-page-title position-absolute start-50 top-50 translate-middle">
+                <a asp-controller="Library" asp-action="Index"><p><strong>AmethystScreen</strong></p></a>
+            </div>
+        </div>
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </body>
+</html>
