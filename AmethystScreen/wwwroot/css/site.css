@@ -11,6 +11,7 @@ a {
 body {
     font-family: "Playwrite AU VIC", sans-serif;
     margin: 0;
+    margin-bottom: 50px;
     min-height: 100vh;
     margin-bottom: 60px;
 }
@@ -19,6 +20,14 @@ header, footer, body {
     font-family: "Playwrite AU VIC", sans-serif;
     background-color: black;
     color: white;
+}
+
+.search-bar {
+    border: none;
+}
+
+#search-btn {
+    background-color: blueviolet;
 }
 
 @media (min-width: 768px) {
