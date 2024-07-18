@@ -7,17 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AmethystScreen.Data;
 using AmethystScreen.Models;
+using System.Drawing;
 
 namespace AmethystScreen.Controllers
 {
-    public class LibraryController : Controller
+    public class LibraryController(AppDbContext context) : Controller
     {
-        private readonly AppDbContext _context;
-
-        public LibraryController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         // GET: Library
         public async Task<IActionResult> Index()
@@ -42,6 +38,28 @@ namespace AmethystScreen.Controllers
             {
                 // Change for future custom error page
                 return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // GET: Library/SearchResult
+        public IActionResult SearchResult(string SearchTitle)
+        {
+            //if (SearchTitle == null || SearchTitle == String.Empty || SearchTitle == "")
+            //{
+            //    return NotFound();
+            //}
+
+            var movieList = _context.Movies.Where(m => m.Title.Contains(SearchTitle)).ToList();
+
+            if (movieList.Count == 0)
+            {
+                return View(nameof(Index), movieList);
+            }
+            else
+            {
+                movieList = (List<Movie>)[];
+                // Change for future custom error page
+                return RedirectToAction(nameof(Index), movieList);
             }
         }
 

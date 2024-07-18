@@ -11,13 +11,15 @@
     <div class="row g-0">
         <div class="col-4" id="media-container">
             <img src="@Model.Image" class="movie-image-container" alt="@Model.Title" id="movie-thumbnail" />
-            <source src="/library/video/@Model.VideoUrl" type="video/mp4">
-            <source src="/library/video/@Model.VideoUrl" type="video/webm">
-            <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
-            <source src="/library/video/@Model.VideoUrl" type="video/quicktime">"
-            <source src="/library/video/@Model.VideoUrl" type="video/x-ms-wmv">
-            <source src="/library/video/@Model.VideoUrl" type="video/x-matroska">
-            <source src="/library/video/@Model.VideoUrl" type="video/mpeg">
+            <video controls="controls">
+                <source src="/library/video/@Model.VideoUrl" type="video/mp4">
+                <source src="/library/video/@Model.VideoUrl" type="video/webm">
+                <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
+                <source src="/library/video/@Model.VideoUrl" type="video/quicktime">"
+                <source src="/library/video/@Model.VideoUrl" type="video/x-ms-wmv">
+                <source src="/library/video/@Model.VideoUrl" type="video/x-matroska">
+                <source src="/library/video/@Model.VideoUrl" type="video/mpeg">
+            </video>
             Your browser does not support the video tag.
         </div>
     </div>
