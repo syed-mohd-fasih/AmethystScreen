@@ -16,7 +16,7 @@ namespace AmethystScreen.Controllers
     {
         private readonly AppDbContext _context = context;
         private readonly MoviesDirectoryService _movieDirectoryService = new(context);
-        
+
         // GET: Library
         public async Task<IActionResult> Index()
         {
@@ -64,6 +64,21 @@ namespace AmethystScreen.Controllers
                 // Change for future custom error page
                 return RedirectToAction(nameof(Index), movieList);
             }
+        }
+
+        [HttpGet("/library/video/{*fileName}")]
+        public IActionResult Play(string fileName)
+        {
+            var filePath = Path.Combine(_movieDirectoryService._directory, fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var fileExtension = Path.GetExtension(filePath);
+                var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                return File(fileStream, _movieDirectoryService.MimeTypes[fileExtension.ToLowerInvariant()]);
+            }
+
+            return NotFound();
         }
 
         public async Task<IActionResult> SyncMovies()

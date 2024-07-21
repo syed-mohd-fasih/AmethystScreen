@@ -50,13 +50,13 @@
         <div class="col-md-4" id="movie-media-container">
             <img src="@Model.Image" class="h-100 w-100 rounded-start" id="movie-image" alt="@Model.Title" />
             <video class="w-100 h-100 visually-hidden" id="movie-video" controls>
-                <source src="@Model.VideoUrl" type="video/mp4">
-                <source src="@Model.VideoUrl" type="video/webm">
-                <source src="@Model.VideoUrl" type="video/x-msvideo">
-                <source src="@Model.VideoUrl" type="video/quicktime">
-                <source src="@Model.VideoUrl" type="video/x-ms-wmv">
-                <source src="@Model.VideoUrl" type="video/x-matroska">
-                <source src="@Model.VideoUrl" type="video/mpeg">
+                <source src="/library/video/@Model.VideoUrl" type="video/mp4">
+                <source src="/library/video/@Model.VideoUrl" type="video/webm">
+                <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
+                <source src="/library/video/@Model.VideoUrl" type="video/quicktime">
+                <source src="/library/video/@Model.VideoUrl" type="video/x-ms-wmv">
+                <source src="/library/video/@Model.VideoUrl" type="video/x-matroska">
+                <source src="/library/video/@Model.VideoUrl" type="video/mpeg">
                 Your browser does not support the video tag.
             </video>
         </div>

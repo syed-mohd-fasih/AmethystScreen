@@ -10,7 +10,19 @@ namespace AmethystScreen.Services
     public class MoviesDirectoryService(AppDbContext context)
     {
         private readonly AppDbContext _context = context;
-        private readonly string _directory = Path.Combine("D:", "Movies");
+        public readonly string _directory = Path.Combine("D:", "Movies");
+        public readonly Dictionary<string, string> MimeTypes = new Dictionary<string, string>
+        {
+            { ".mp4", "video/mp4" },
+            { ".webm", "video/webm" },
+            { ".ogv", "video/ogg" },
+            { ".avi", "video/x-msvideo" },
+            { ".mov", "video/quicktime" },
+            { ".wmv", "video/x-ms-wmv" },
+            { ".flv", "video/x-flv" },
+            { ".mkv", "video/x-matroska" },
+            { ".mpeg", "video/mpeg" }
+        };
 
         public async Task<IEnumerable<Movie>> GetMoviesAsync()
         {
