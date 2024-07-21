@@ -21,6 +21,7 @@ namespace AmethystScreen.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            _logger.LogError($"{nameof(Error)}: An error occured: Please check previous logs for more info");
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

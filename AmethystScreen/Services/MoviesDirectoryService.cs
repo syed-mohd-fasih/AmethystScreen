@@ -1,5 +1,6 @@
 ﻿using AmethystScreen.Data;
 using AmethystScreen.Models;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Text.Json;
@@ -7,8 +8,9 @@ using System.Text.Json;
 namespace AmethystScreen.Services
 {
     // Redo From StreamSpot
-    public class MoviesDirectoryService(AppDbContext context)
+    public class MoviesDirectoryService(AppDbContext context, ILogger<MoviesDirectoryService> logger)
     {
+        private readonly ILogger<MoviesDirectoryService> _logger = logger;
         private readonly AppDbContext _context = context;
         public readonly string _directory = Path.Combine("D:", "Movies");
         public readonly Dictionary<string, string> MimeTypes = new Dictionary<string, string>
@@ -26,11 +28,13 @@ namespace AmethystScreen.Services
 
         public async Task<IEnumerable<Movie>> GetMoviesAsync()
         {
+            _logger.LogInformation($"{nameof(GetMoviesAsync)}: Getting movies from context");
             return await _context.Movies.ToListAsync();
         }
 
         private async Task AddMovieAsync(Movie movie)
         {
+            _logger.LogInformation($"{nameof(AddMovieAsync)}: Added movie {movie.Title} to context");
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
         }
@@ -54,10 +58,15 @@ namespace AmethystScreen.Services
                     var movie = JsonSerializer.Deserialize<Movie>(json, options);
                     if (movie != null)
                     {
+                        _logger.LogWarning($"{nameof(ImportMoviesFromDirectoryAsync)}: looking for video in directory for {movie.Title}");
                         string? url = FileVideoUrl(d);
                         if (url == null) movie.VideoUrl = "<Not Found>";
                         else movie.VideoUrl = url;
                         await AddMovieAsync(movie);
+                    }
+                    else
+                    {
+                        _logger.LogError($"{nameof(ImportMoviesFromDirectoryAsync)}: {d}\\movie.json contents not found");
                     }
                 }
             }

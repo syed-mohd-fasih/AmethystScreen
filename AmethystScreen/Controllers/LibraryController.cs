@@ -9,17 +9,20 @@ using AmethystScreen.Data;
 using AmethystScreen.Models;
 using System.Drawing;
 using AmethystScreen.Services;
+using Microsoft.Extensions.Options;
 
 namespace AmethystScreen.Controllers
 {
-    public class LibraryController(AppDbContext context) : Controller
+    public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService) : Controller
     {
         private readonly AppDbContext _context = context;
-        private readonly MoviesDirectoryService _movieDirectoryService = new(context);
+        private readonly ILogger<LibraryController> _logger = logger;
+        private readonly MoviesDirectoryService _movieDirectoryService = moviesDirectoryService;
 
         // GET: Library
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation($"{nameof(Index)}: getting movies to controller");
             var movies = await _movieDirectoryService.GetMoviesAsync();
             return View(movies);
         }
@@ -29,17 +32,27 @@ namespace AmethystScreen.Controllers
         {
             if (id == 0)
             {
+                _logger.LogWarning($"{nameof(Movie)}: ID:0 access attempt");
                 return NotFound();
             }
 
             if (MovieExists(id))
             {
                 var movie = await _context.Movies.FirstOrDefaultAsync(x => x.Id == id);
-                return View(movie);
+                if (movie == null)
+                {
+                    _logger.LogError($"{nameof(Movie)}: Movie couldn't be retrieved from context");
+                    return RedirectToAction("Error", nameof(HomeController));
+                }
+                else
+                {
+                    _logger.LogInformation($"{nameof(Movie)}: {movie.Id}:{movie.Title} was accessed");
+                    return View(movie);
+                }
             }
             else
             {
-                // Change for future custom error page
+                _logger.LogError($"{nameof(Movie)}: Movie {id} not found in context");
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -47,11 +60,6 @@ namespace AmethystScreen.Controllers
         // GET: Library/SearchResult
         public IActionResult SearchResult(string SearchTitle)
         {
-            //if (SearchTitle == null || SearchTitle == String.Empty || SearchTitle == "")
-            //{
-            //    return NotFound();
-            //}
-
             var movieList = _context.Movies.Where(m => m.Title.Contains(SearchTitle)).ToList();
 
             if (movieList.Count == 0)
@@ -61,7 +69,6 @@ namespace AmethystScreen.Controllers
             else
             {
                 movieList = (List<Movie>)[];
-                // Change for future custom error page
                 return RedirectToAction(nameof(Index), movieList);
             }
         }
@@ -78,11 +85,13 @@ namespace AmethystScreen.Controllers
                 return File(fileStream, _movieDirectoryService.MimeTypes[fileExtension.ToLowerInvariant()]);
             }
 
+            _logger.LogError($"{nameof(Play)}: {fileName} couldn't be retrieved");
             return NotFound();
         }
 
         public async Task<IActionResult> SyncMovies()
         {
+            _logger.LogInformation($"{nameof(SyncMovies)}: syncing movies");
             await _movieDirectoryService.ImportMoviesFromDirectoryAsync();
             return RedirectToAction(nameof(Index));
         }
