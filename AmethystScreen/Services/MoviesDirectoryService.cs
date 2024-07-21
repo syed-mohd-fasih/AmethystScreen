@@ -1,8 +1,6 @@
 ﻿using AmethystScreen.Data;
 using AmethystScreen.Models;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 using System.Text.Json;
 
 namespace AmethystScreen.Services
