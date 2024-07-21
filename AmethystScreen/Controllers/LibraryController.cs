@@ -8,20 +8,23 @@ using Microsoft.EntityFrameworkCore;
 using AmethystScreen.Data;
 using AmethystScreen.Models;
 using System.Drawing;
+using AmethystScreen.Services;
 
 namespace AmethystScreen.Controllers
 {
     public class LibraryController(AppDbContext context) : Controller
     {
         private readonly AppDbContext _context = context;
-
+        private readonly MoviesDirectoryService _movieDirectoryService = new(context);
+        
         // GET: Library
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Movies.ToListAsync());
+            var movies = await _movieDirectoryService.GetMoviesAsync();
+            return View(movies);
         }
 
-        // GET: Library/Movie
+        // GET: Library/Movie/<id>
         public async Task<IActionResult> Movie(int id)
         {
             if (id == 0)
@@ -63,51 +66,10 @@ namespace AmethystScreen.Controllers
             }
         }
 
-        // POST: Library/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Year,Title,Tags,Description,Image,Rating,VideoUrl,Language")] Movie movie)
+        public async Task<IActionResult> SyncMovies()
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(movie);
-        }
-
-        // POST: Library/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Year,Title,Tags,Description,Image,Rating,VideoUrl,Language")] Movie movie)
-        {
-            if (id != movie.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(movie.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(movie);
+            await _movieDirectoryService.ImportMoviesFromDirectoryAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool MovieExists(int id)

@@ -4,33 +4,90 @@
 }
 
 <head>
+    <style>
+        .card:hover {
+            transform: none;
+            box-shadow: none;
+        }
 
+        #movie-media-container {
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #movie-media-container::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0);
+                transition: background 0.3s ease-in-out;
+                pointer-events: none;
+            }
+
+            #movie-media-container:hover::after {
+                background: rgba(0, 0, 0, 0.5);
+            }
+
+        #movie-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        #movie-video {
+            z-index: 100;
+        }
+    </style>
 </head>
 
-<div class="card vh-100 vw-100">
+<div class="card h-100 w-100">
     <div class="row g-0">
-        <div class="col-4" id="media-container">
-            <img src="@Model.Image" class="movie-image-container" alt="@Model.Title" id="movie-thumbnail" />
-            <video controls="controls">
-                <source src="/library/video/@Model.VideoUrl" type="video/mp4">
-                <source src="/library/video/@Model.VideoUrl" type="video/webm">
-                <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
-                <source src="/library/video/@Model.VideoUrl" type="video/quicktime">"
-                <source src="/library/video/@Model.VideoUrl" type="video/x-ms-wmv">
-                <source src="/library/video/@Model.VideoUrl" type="video/x-matroska">
-                <source src="/library/video/@Model.VideoUrl" type="video/mpeg">
+        <div class="col-md-4" id="movie-media-container">
+            <img src="@Model.Image" class="h-100 w-100 rounded-start" id="movie-image" alt="@Model.Title" />
+            <video class="w-100 h-100 visually-hidden" id="movie-video" controls>
+                <source src="@Model.VideoUrl" type="video/mp4">
+                <source src="@Model.VideoUrl" type="video/webm">
+                <source src="@Model.VideoUrl" type="video/x-msvideo">
+                <source src="@Model.VideoUrl" type="video/quicktime">
+                <source src="@Model.VideoUrl" type="video/x-ms-wmv">
+                <source src="@Model.VideoUrl" type="video/x-matroska">
+                <source src="@Model.VideoUrl" type="video/mpeg">
+                Your browser does not support the video tag.
             </video>
-            Your browser does not support the video tag.
         </div>
-    </div>
-    <div class="col-md-8">
-        <div class="card-body" id="description">
-            <p class="card-title">@Model.Title</p>
-            <p class="card-text mb-0"><small class="text-body-secondary">@Model.Year</small></p>
-            <p class="card-text"><small class="text-body-secondary">@Model.Language</small></p>
-            <p class="card-text">@String.Join(", ", Model.Tags)</p>
-            <p class="card-text">IMDB Rating: @Model.Rating</p>
-            <p class="card-text"><strong>Synopsis:</strong>@Model.Description</p>
+        <div class="col-md-8" id="movie-desc-container">
+            <div class="card-body">
+                <p class="card-title lato-bold fs-1">@Model.Title</p>
+                <hr />
+                <p class="card-text pb-0">@Model.Year</p>
+                <p class="card-text pb-0">[@Model.Language]</p>
+                <p class="card-text lato-light">@String.Join(", ", Model.Tags)</p>
+                <p class="card-text">IMDB Rating: <span class="lato-bold">@Model.Rating</span></p>
+                <hr />
+                <p class="card-text fs-4"><strong>Synopsis:</strong></p>
+                <p class="card-text fs-4">@Model.Description</p>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const imageEl = document.getElementById('movie-image');
+        const videoEl = document.getElementById('movie-video');
+        const descEl = document.getElementById('movie-desc-container');
+
+        imageEl.addEventListener('click', function () {
+            if (videoEl.classList.contains('visually-hidden')) {
+                imageEl.classList.add('visually-hidden');
+                videoEl.classList.remove('visually-hidden');
+                descEl.classList.add('visually-hidden');
+            }
+        });
+    });
+</script>

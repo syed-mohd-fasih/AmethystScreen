@@ -1,11 +1,12 @@
 using AmethystScreen.Data;
+using AmethystScreen.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace AmethystScreen
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ namespace AmethystScreen
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlite(builder.Configuration.GetConnectionString("AmethystMovieContext")));
+            builder.Services.AddScoped<MoviesDirectoryService>();
 
             var app = builder.Build();
 
@@ -33,7 +35,22 @@ namespace AmethystScreen
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+            );
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<AppDbContext>();
+                context.Database.Migrate();
+
+                // To seed Db
+                if (context.Movies.Count() <= 0)
+                {
+                    var movieService = scope.ServiceProvider.GetRequiredService<MoviesDirectoryService>();
+                    await movieService.ImportMoviesFromDirectoryAsync();
+                }
+            }
 
             app.Run();
         }

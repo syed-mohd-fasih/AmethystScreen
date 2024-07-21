@@ -3,6 +3,12 @@
     ViewData["Title"] = "Library";
 }
 
+<style>
+    .card-body {
+        color: blueviolet;
+    }
+</style>
+
 <div class="align-content-center">
     <form asp-action="SearchResult" class="mb-3">
         <div class="input-group">
@@ -15,16 +21,16 @@
 <hr />
 
 <div class="main-body w-100 h-100">
-    <div class="row justify-content-around">
+    <div class="row g-4">
         @if (Model.Count() > 0)
         {
             @foreach (var movie in Model)
             {
             <div class="col">
-                <div class="card card-hover-effect">
+                <div class="card">
                     <a asp-action="Movie" asp-route-id="@movie.Id">
                         <img src="@movie.Image" class="card-img-top" alt="@movie.Title">
-                        <div class="card-body">
+                        <div class="card-body lato-light">
                             <h4 class="card-title">@movie.Title</h4>
                         </div>
                     </a>
