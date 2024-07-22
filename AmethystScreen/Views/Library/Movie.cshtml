@@ -52,6 +52,8 @@
             height: 100%;
             margin: auto;
             background-color: black;
+            border: solid 10px blueviolet;
+            border-radius: 5px;
         }
 
         #movie-video {
@@ -60,8 +62,6 @@
             object-fit: cover;
             margin-top: 100px;
             margin-bottom: 100px;
-            border: solid 10px blueviolet;
-            border-radius: 5px;
         }
 
         #library-btn {
@@ -74,11 +74,56 @@
             height: 50px;
             width: 50px;
         }
+
+        .plyr {
+            --plyr-color-main: blueviolet;
+            --plyr-video-control-color: blueviolet;
+            --plyr-video-control-color-hover: black;
+            --plyr-captions-text-color: khaki;
+        }
+
+        #custom-play-button {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.5s ease-in-out;
+            display: block;
+        }
+
+            #custom-play-button:hover {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
     </style>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
+    <script src="https://cdn.plyr.io/3.6.8/plyr.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const controls = [
+                //'play-large', // Large play button
+                'rewind', 
+                'play', // Play button
+                'fast-forward', 
+                'progress', // Progress bar
+                'current-time', 
+                'duration', 
+                'mute', // Speaker
+                'volume', // Volume control bar
+                'captions', // Toggle captions (if available)
+                'settings', // Settings
+                'fullscreen' // Fullscreen button
+            ];
+            const player = Plyr.setup('.plyr', { controls });
+        });
+    </script>
 </head>
 
 <div class="card h-100 w-100 position-relative">
-        <a type="button" asp-action="Index" class="btn-close" id="library-btn"></a>
+    <a type="button" asp-action="Index" class="btn-close" id="library-btn"></a>
     <div class="row g-0">
         <div class="col-md-4" id="movie-image-container">
             <img src="@Model.Image" class="h-100 w-100 rounded-start" id="movie-image" alt="@Model.Title" />
@@ -100,7 +145,8 @@
 </div>
 
 <div id="movie-video-container" class="d-flex align-items-center justify-content-center visually-hidden">
-    <video id="movie-video" controls>
+    <img id="custom-play-button" class="rotate-anim" src="~/assets/play_button.png" alt="Play" />
+    <video id="movie-video" class="plyr" controls>
         <source src="/library/video/@Model.VideoUrl" type="video/mp4">
         <source src="/library/video/@Model.VideoUrl" type="video/webm">
         <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
@@ -117,14 +163,33 @@
         const imageEl = document.getElementById('movie-image-container');
         const videoEl = document.getElementById('movie-video-container');
         const descEl = document.getElementById('movie-desc-container');
+        const buttonEl = document.getElementById('library-btn')
 
         imageEl.addEventListener('click', function () {
             if(videoEl.classList.contains('visually-hidden')) {
                 videoEl.classList.remove('visually-hidden');
                 imageEl.style.display = 'none';
                 descEl.style.display = 'none';
+                buttonEl.style.display = 'none';
                 videoEl.style.display = 'flex';
             }
+        });
+
+        const playbutton = document.getElementById('custom-play-button');
+        const player = new Plyr('#movie-video');
+
+        playbutton.addEventListener('click', function () {
+            player.play();
+        });
+
+        player.addEventListener('play', function () {
+            playbutton.style.display = 'none';
+        });
+        player.addEventListener('pause', function () {
+            playbutton.style.display = 'block';
+        });
+        player.addEventListener('ended', function () {
+            playbutton.style.display = 'block';
         });
     });
 </script>
