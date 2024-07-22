@@ -5,14 +5,23 @@
 
 <style>
     .card-body {
-        color: blueviolet;
+        background-color: blueviolet;
+        color: black;
+    }
+
+    .card-img-top {
+        border: 2px solid blueviolet;
+    }
+
+    #search-bar {
+        border: 1px solid blueviolet;
     }
 </style>
 
 <div class="align-content-center">
     <form asp-action="SearchResult" class="mb-3">
         <div class="input-group">
-            <input type="search" class="form-control search-bar bg-black text-light border border-secondary rounded-start-pill" name="SearchTitle" placeholder="Search Title" />
+            <input type="search" class="form-control search-bar bg-black text-light rounded-start-pill" id="search-bar" name="SearchTitle" placeholder="Search Title" />
             <input type="submit" value="Search" class="btn text-dark rounded-start-pill" id="search-btn" />
         </div>
     </form>
@@ -30,7 +39,7 @@
                 <div class="card">
                     <a asp-action="Movie" asp-route-id="@movie.Id">
                         <img src="@movie.Image" class="card-img-top" alt="@movie.Title">
-                        <div class="card-body lato-light">
+                        <div class="card-body rounded-bottom lato-light">
                             <h4 class="card-title">@movie.Title</h4>
                         </div>
                     </a>
@@ -45,8 +54,4 @@
             </div>
         }
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to Library</a>
 </div>
