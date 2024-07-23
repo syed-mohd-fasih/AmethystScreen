@@ -48,6 +48,7 @@
         }
 
         #movie-video-container {
+            position: relative;
             width: 100%;
             height: 100%;
             margin: auto;
@@ -84,19 +85,42 @@
 
         #custom-play-button {
             position: absolute;
-            top: 35%;
+            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100px;
-            height: 100px;
             cursor: pointer;
             z-index: 10;
             transition: transform 0.5s ease-in-out;
             display: block;
+
+            img {
+                width: 100px;
+                height: 100px;
+            }
         }
 
             #custom-play-button:hover {
                 transform: translate(-50%, -50%) rotate(360deg);
+            }
+
+        .card-title {
+            font-size: 1.5rem;
+        }
+
+        .card-info {
+            font-size: 0.8rem;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+        }
+
+            .btn-close::before, .btn-close::after {
+                background-color: black;
+            }
+
+            .btn-close:hover {
+                opacity: 1;
             }
     </style>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
@@ -123,29 +147,35 @@
 </head>
 
 <div class="card h-100 w-100 position-relative">
-    <a type="button" asp-action="Index" class="btn-close" id="library-btn"></a>
+    <a type="button" asp-action="Index" class="btn-close m-0" id="library-btn"></a>
     <div class="row g-0">
         <div class="col-md-4" id="movie-image-container">
-            <img src="@Model.Image" class="h-100 w-100 rounded-start" id="movie-image" alt="@Model.Title" />
+            <img src="@Model.Image" class="h-100 w-100 rounded-3" id="movie-image" alt="@Model.Title" />
         </div>
-        <div class="col-md-8 rounded-end" id="movie-desc-container">
+        <div class="col-md-8 rounded-3" id="movie-desc-container">
             <div class="card-body">
-                <p class="card-title lato-bold fs-1">@Model.Title</p>
-                <hr />
-                <p class="card-text pb-0">@Model.Year</p>
-                <p class="card-text pb-0">[@Model.Language]</p>
-                <p class="card-text">@String.Join(", ", Model.Tags)</p>
-                <p class="card-text">IMDB Rating: <span class="lato-bold">@Model.Rating</span></p>
-                <hr />
-                <p class="card-text fs-4"><strong>Synopsis:</strong></p>
-                <p class="card-text fs-4">@Model.Description</p>
+                <p class="card-title lato-bold">@Model.Title</p>
+                <hr class="mb-2 mt-2"/>
+                <div class="card-info">
+                    <p class="lato-light mb-0">@Model.Year</p>
+                    <p class="lato-light mb-0">[@Model.Language]</p>
+                    <p class="lato-light mb-0">@String.Join(", ", Model.Tags)</p>
+                    <p class="mb-0">IMDB Rating: <span class="lato-bold">@Model.Rating</span></p>
+                </div>
+                <hr class="mb-2 mt-2" />
+                <div class="card-desc">
+                    <p class="mb-0"><strong>Synopsis:</strong></p>
+                    <p class="">@Model.Description</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div id="movie-video-container" class="d-flex align-items-center justify-content-center visually-hidden">
-    <img id="custom-play-button" class="rotate-anim" src="~/assets/play_button.png" alt="Play" />
+    <div id="custom-play-button">
+        <img class="rotate-anim" src="~/assets/play_button.png" alt="Play" />
+    </div>
     <video id="movie-video" class="plyr" controls>
         <source src="/library/video/@Model.VideoUrl" type="video/mp4">
         <source src="/library/video/@Model.VideoUrl" type="video/webm">
@@ -180,6 +210,7 @@
 
         playbutton.addEventListener('click', function () {
             player.play();
+            playbutton.style.display = 'none';
         });
 
         player.addEventListener('play', function () {
