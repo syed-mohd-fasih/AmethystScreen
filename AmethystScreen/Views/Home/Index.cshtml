@@ -16,8 +16,8 @@
         <style>
             .home-page-title {
                 font-family: "Playwrite AU VIC", sans-serif;
-                display: flex;
-                font-size: 5rem;
+                font-size: 3rem;
+                text-align: center;
                 letter-spacing: .2rem;
                 a {
                     color: white;
@@ -25,6 +25,13 @@
                     transition: transform 0.3s ease, opacity 0.3s ease;
                 }
             }
+
+            @@media (min-width: 768px) {
+                .home-page-title {
+                    font-size: 4rem;
+                }
+            }
+
             .home-page-title:hover {
                 a {
                     color: blueviolet;
@@ -36,10 +43,12 @@
         </style>
     </head>
     <body>
-        <div class="dynamic-bg h-100 w-100">
-            <div class="prevent-select home-page-title position-absolute start-50 top-50 translate-middle">
-                <a asp-controller="Library" asp-action="Index"><p><strong>AmethystScreen</strong></p></a>
-            </div>
+        <div class="h-100 w-100">
+        <div class="prevent-select home-page-title position-absolute start-50 top-50 translate-middle fw-bold">
+            <a class="d-flex flex-column flex-md-row justify-content-around align-items-center" asp-controller="Library" asp-action="Index">
+                <span>Amethyst</span>
+                <span>Screen</span>
+            </a>
         </div>
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
