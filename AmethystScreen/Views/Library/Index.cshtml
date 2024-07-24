@@ -4,24 +4,23 @@
 }
 
 <style>
-        .card-body {
-            background-color: blueviolet;
-            color: black;
-        }
+    .card-body {
+        background-color: blueviolet;
+        color: black;
+    }
 
-        .card-title {
-            font-size: 1.3rem;
+    .card-title {
+        font-size: 1.2rem;
+    }
 
-        }
+    .card-img-top {
+        object-fit: cover;
+        border: 2px solid blueviolet;
+    }
 
-        .card-img-top {
-            object-fit: cover;
-            border: 2px solid blueviolet;
-        }
-
-        #search-bar {
-            border: 1px solid blueviolet;
-        }
+    #search-bar {
+        border: 1px solid blueviolet;
+    }
 </style>
 
 <div class="align-content-center">
@@ -41,23 +40,23 @@
         {
             @foreach (var movie in Model)
             {
-            <div class="col g-2 d-flex justify-content-around align-items-center">
-                <div class="card">
-                    <a asp-action="Movie" asp-route-id="@movie.Id">
-                        <img src="@movie.Image" class="card-img-top" alt="@movie.Title">
-                        <div class="card-body rounded-bottom lato-bold d-flex w-100 justify-content-around">
-                            <p class="card-title">@movie.Title</p>
-                        </div>
-                    </a>
+                <div class="col g-4 d-flex justify-content-around align-items-center">
+                    <div class="card">
+                        <a asp-action="Movie" asp-route-id="@movie.Id">
+                            <img src="@movie.Image" class="card-img-top" alt="@movie.Title">
+                            <div class="card-body rounded-bottom lato-bold d-flex w-100 justify-content-around">
+                                <p class="card-title">@movie.Title</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </div>
             }
         }
         else
         {
-        <div class="w-100">
-            <p class="text-center fs-2">Sorry! No Movies were found...</p>
-        </div>
+            <div class="w-100">
+                <p class="text-center fs-2">Sorry! No Movies were found...</p>
+            </div>
         }
     </div>
 </div>

@@ -1,49 +1,52 @@
 ﻿@{
     Layout = null;
 }
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>AmethystScreen</title>
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/AmethystScreen.styles.css" asp-append-version="true" />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+VIC:wght@100..400&display=swap" rel="stylesheet">
-        <style>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AmethystScreen</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AmethystScreen.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playwrite+AU+VIC:wght@100..400&display=swap" rel="stylesheet">
+    <style>
+        .home-page-title {
+            font-family: "Playwrite AU VIC", sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            letter-spacing: .2rem;
+
+            a
+            {
+                color: white;
+                opacity: 0.5;
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+        }
+
+        @@media (min-width: 768px) {
             .home-page-title {
-                font-family: "Playwrite AU VIC", sans-serif;
-                font-size: 3rem;
-                text-align: center;
-                letter-spacing: .2rem;
-                a {
-                    color: white;
-                    opacity: 0.5;
-                    transition: transform 0.3s ease, opacity 0.3s ease;
-                }
+                font-size: 4rem;
             }
+        }
 
-            @@media (min-width: 768px) {
-                .home-page-title {
-                    font-size: 4rem;
-                }
+        .home-page-title:hover {
+            a
+            {
+                color: blueviolet;
+                opacity: 1;
+                transform: scale(1.05);
+                animation: 3s;
             }
-
-            .home-page-title:hover {
-                a {
-                    color: blueviolet;
-                    opacity: 1;
-                    transform: scale(1.05);
-                    animation: 3s;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="h-100 w-100">
+        }
+    </style>
+</head>
+<body>
+    <div class="h-100 w-100">
         <div class="prevent-select home-page-title position-absolute start-50 top-50 translate-middle fw-bold">
             <a class="d-flex flex-column flex-md-row justify-content-around align-items-center" asp-controller="Library" asp-action="Index">
                 <span>Amethyst</span>
@@ -53,5 +56,5 @@
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
-    </body>
+</body>
 </html>

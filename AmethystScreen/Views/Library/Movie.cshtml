@@ -90,16 +90,17 @@
             z-index: 10;
             transition: transform 0.5s ease-in-out;
             display: block;
-
-            img {
+            
+            img 
+            {
                 width: 100px;
                 height: 100px;
             }
         }
 
-            #custom-play-button:hover {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
+        #custom-play-button:hover {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
 
         .card-title {
             font-size: 1.5rem;
@@ -113,13 +114,13 @@
             font-size: 1rem;
         }
 
-            .btn-close::before, .btn-close::after {
-                background-color: black;
-            }
+        .btn-close::before, .btn-close::after {
+            background-color: black;
+        }
 
-            .btn-close:hover {
-                opacity: 1;
-            }
+        .btn-close:hover {
+            opacity: 1;
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
     <script src="https://cdn.plyr.io/3.6.8/plyr.js"></script>
@@ -164,7 +165,7 @@
         <div class="col-md-8 rounded-3" id="movie-desc-container">
             <div class="card-body">
                 <p class="card-title lato-bold">@Model.Title</p>
-                <hr class="mb-2 mt-2"/>
+                <hr class="mb-2 mt-2" />
                 <div class="card-info">
                     <p class="lato-light mb-0">@Model.Year</p>
                     <p class="lato-light mb-0">[@Model.Language]</p>
@@ -205,7 +206,7 @@
         const buttonEl = document.getElementById('library-btn')
 
         imageEl.addEventListener('click', function () {
-            if(videoEl.classList.contains('visually-hidden')) {
+            if (videoEl.classList.contains('visually-hidden')) {
                 videoEl.classList.remove('visually-hidden');
                 imageEl.style.display = 'none';
                 descEl.style.display = 'none';
