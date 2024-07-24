@@ -10,8 +10,8 @@ namespace AmethystScreen.Services
     {
         private readonly ILogger<MoviesDirectoryService> _logger = logger;
         private readonly AppDbContext _context = context;
-        public readonly string _directory = Path.Combine("D:", "Movies");
-        public readonly Dictionary<string, string> MimeTypes = new Dictionary<string, string>
+        public static readonly string _directory = Path.Combine("D:", "Movies");
+        public readonly Dictionary<string, string> MimeTypes = new()
         {
             { ".mp4", "video/mp4" },
             { ".webm", "video/webm" },
@@ -79,6 +79,8 @@ namespace AmethystScreen.Services
                 string[] files = Directory.GetFiles(d, "*" + ext);
                 if (files.Length > 0)
                 {
+                    files[0] = Path.GetFullPath(files[0]);
+                    files[0] = files[0].Substring(_directory.Length + 1).Replace("\\", "/");
                     return files[0];
                 }
             }

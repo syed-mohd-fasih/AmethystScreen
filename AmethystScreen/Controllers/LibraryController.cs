@@ -69,7 +69,9 @@ namespace AmethystScreen.Controllers
         [HttpGet("/library/video/{*fileName}")]
         public IActionResult Play(string fileName)
         {
-            var filePath = Path.Combine(_movieDirectoryService._directory, fileName);
+            fileName = fileName.Replace("/", "\\");
+            var filePath = Path.Combine(MoviesDirectoryService._directory, fileName);
+            filePath = Path.GetFullPath(filePath);
 
             if (System.IO.File.Exists(filePath))
             {

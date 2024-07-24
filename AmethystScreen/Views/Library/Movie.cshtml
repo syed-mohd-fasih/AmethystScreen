@@ -58,8 +58,6 @@
         }
 
         #movie-video {
-            width: 100%;
-            height: 90%;
             object-fit: cover;
             margin-top: 100px;
             margin-bottom: 100px;
@@ -129,24 +127,35 @@
         document.addEventListener('DOMContentLoaded', () => {
             const controls = [
                 //'play-large', // Large play button
-                'rewind', 
+                'rewind',
                 'play', // Play button
-                'fast-forward', 
+                'fast-forward',
                 'progress', // Progress bar
-                'current-time', 
-                'duration', 
+                'current-time',
+                'duration',
                 'mute', // Speaker
                 'volume', // Volume control bar
                 'captions', // Toggle captions (if available)
                 'settings', // Settings
                 'fullscreen' // Fullscreen button
             ];
-            const player = Plyr.setup('.plyr', { controls });
+
+            const settings = [
+                'captions',
+                'quality',
+                'speed',
+                'loop'
+            ];
+
+            const player = Plyr.setup('.plyr', { controls, settings });
+
+            const playerControls = document.querySelector('.plyr__controls');
+            playerControls.style.display = 'none';
         });
     </script>
 </head>
 
-<div class="card h-100 w-100 position-relative">
+<div class="card h-100 w-100 position-relative prevent-select">
     <a type="button" asp-action="Index" class="btn-close m-0" id="library-btn"></a>
     <div class="row g-0">
         <div class="col-md-4" id="movie-image-container">
@@ -172,11 +181,11 @@
     </div>
 </div>
 
-<div id="movie-video-container" class="d-flex align-items-center justify-content-center visually-hidden">
+<div id="movie-video-container" class="d-flex align-items-center justify-content-center visually-hidden prevent-select">
     <div id="custom-play-button">
         <img class="rotate-anim" src="~/assets/play_button.png" alt="Play" />
     </div>
-    <video id="movie-video" class="plyr" controls>
+    <video id="movie-video" class="plyr m-0 p-0" controls>
         <source src="/library/video/@Model.VideoUrl" type="video/mp4">
         <source src="/library/video/@Model.VideoUrl" type="video/webm">
         <source src="/library/video/@Model.VideoUrl" type="video/x-msvideo">
@@ -207,20 +216,12 @@
 
         const playbutton = document.getElementById('custom-play-button');
         const player = new Plyr('#movie-video');
+        const playerControls = document.querySelector('.plyr__controls');
 
         playbutton.addEventListener('click', function () {
+            playbutton.style.display = 'none';
+            playerControls.style.display = 'flex';
             player.play();
-            playbutton.style.display = 'none';
-        });
-
-        player.addEventListener('play', function () {
-            playbutton.style.display = 'none';
-        });
-        player.addEventListener('pause', function () {
-            playbutton.style.display = 'block';
-        });
-        player.addEventListener('ended', function () {
-            playbutton.style.display = 'block';
         });
     });
 </script>
