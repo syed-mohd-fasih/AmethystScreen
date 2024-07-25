@@ -26,25 +26,41 @@
             }
         }
 
-        @@media(min-width: 770px) {
+        @@media(min-width: 768px) {
             .navbar .navbar-brand {
                 justify-content: left;
             }
+        }
+        
+        .navbar-toggler {
+            position: absolute;
+            height: 40px;
+            width: 40px;
+            align-items:center;
+            justify-content: center;
+            top: 21px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-link {
+            float: right;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
+        <nav class="navbar navbar-expand-md navbar-toggleable-md box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <span class="navbar-text">AmethystScreen</span>
+                <a class="navbar-brand m-0" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="navbar-text fs-1">AmethystScreen</span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler p-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <img src="~/icon.png" alt="Icon" style="height: 30px; width: 30px;" />
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                <div class="navbar-collapse collapse d-md-inline-flex justify-content-end">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
