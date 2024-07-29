@@ -51,12 +51,32 @@ header, footer {
 .form-control {
     background-color: black;
     color: white;
+    border: 1px solid blueviolet;
 }
 
     .form-control:focus {
         background-color: black;
         color: white;
     }
+
+.form-control.disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+.nav-link {
+    color: blueviolet;
+}
+
+.nav-link:focus {
+    color: blueviolet;
+}
+
+.nav-pills .nav-link.active {
+    color: black;
+    background-color: blueviolet;
+}
 
 .form-card {
     display: flex;

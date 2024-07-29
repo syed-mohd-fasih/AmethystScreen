@@ -18,7 +18,14 @@ namespace AmethystScreen
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystMovieContext")));
             builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystUserContext")));
-            builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<UserDbContext>();
+            builder.Services.AddDefaultIdentity<User>(
+                options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                })
+                .AddEntityFrameworkStores<UserDbContext>()
+                .AddDefaultTokenProviders();
             builder.Services.AddScoped<MoviesDirectoryService>();
 
             builder.Logging.ClearProviders();
