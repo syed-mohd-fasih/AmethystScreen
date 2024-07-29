@@ -224,11 +224,20 @@
         const playbutton = document.getElementById('custom-play-button');
         const player = new Plyr('#movie-video');
         const playerControls = document.querySelector('.plyr__controls');
+        const playerPoster = document.querySelector('.plyr__poster');
 
         playbutton.addEventListener('click', function () {
             playbutton.style.display = 'none';
             playerControls.style.display = 'flex';
             player.play();
         });
+
+        playerPoster.addEventListener('click', function () {
+            if (player.paused) {
+                playbutton.style.display = 'none';
+                playerControls.style.display = 'flex';
+                player.play();
+            }
+        }); 
     });
 </script>
