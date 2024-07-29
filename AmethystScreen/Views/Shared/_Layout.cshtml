@@ -54,7 +54,7 @@
         <nav class="navbar navbar-expand-md navbar-toggleable-md box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand m-0" asp-area="" asp-controller="Home" asp-action="Index">
-                    <span class="navbar-text fs-1">AmethystScreen</span>
+                    <span class="navbar-text fs-3">AmethystScreen</span>
                 </a>
                 <button class="navbar-toggler p-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -62,12 +62,26 @@
                 </button>
                 <div class="navbar-collapse collapse d-md-inline-flex justify-content-end">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/register">Register</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <p>Welcome, @User.Identity.Name!</p>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">Manage Account</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/register">Register</a>
+                            </li>
+                        }
+
                     </ul>
                 </div>
             </div>

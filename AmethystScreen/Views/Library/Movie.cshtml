@@ -5,6 +5,11 @@
 
 <head>
     <style>
+        main {
+            height: 100%;
+            width: 100%;
+        }
+
         .card:hover {
             transform: none;
             box-shadow: none;
@@ -204,6 +209,7 @@
         const videoEl = document.getElementById('movie-video-container');
         const descEl = document.getElementById('movie-desc-container');
         const buttonEl = document.getElementById('library-btn')
+        const mainEl = document.querySelector('main');
 
         imageEl.addEventListener('click', function () {
             if (videoEl.classList.contains('visually-hidden')) {

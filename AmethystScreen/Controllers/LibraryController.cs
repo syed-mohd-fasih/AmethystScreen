@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using AmethystScreen.Data;
 using AmethystScreen.Models;
 using AmethystScreen.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AmethystScreen.Controllers
 {
