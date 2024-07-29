@@ -27,6 +27,7 @@ namespace AmethystScreen
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
             builder.Services.AddScoped<MoviesDirectoryService>();
+            builder.Services.AddScoped<CommentsService>();
 
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();

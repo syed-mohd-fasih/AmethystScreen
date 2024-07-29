@@ -1,0 +1,14 @@
+﻿@model AmethystScreen.Models.Comment
+
+<div class="comment">
+    <p>@Model.CommentBy</p>
+    <p>@Model.CreatedAt.ToShortTimeString()</p>
+    <p>@Model.Content</p>
+    @if(Model.Replies != null && Model.Replies.Any())
+    {
+        @foreach(var Reply in Model.Replies)
+        {   
+            <partial name="_CommentPartial" model="Reply" />
+        }
+    }
+</div>
