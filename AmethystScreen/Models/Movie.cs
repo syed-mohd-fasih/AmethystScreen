@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Drawing;
+using System.Text.Json.Serialization;
 
 namespace AmethystScreen.Models
 {
@@ -15,5 +16,6 @@ namespace AmethystScreen.Models
         public double Rating { get; set; }
         public string VideoUrl { get; set; } = string.Empty;
         public string Language { get; set; } = string.Empty;
+        public string Slug {  get; set; } = string.Empty;
     }
 }

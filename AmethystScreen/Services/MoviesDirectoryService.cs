@@ -57,9 +57,19 @@ namespace AmethystScreen.Services
                     if (movie != null)
                     {
                         _logger.LogWarning($"{nameof(ImportMoviesFromDirectoryAsync)}: looking for video in directory for {movie.Title}");
+                        
+                        string slug = GenerateSlug(movie.Title, movie.Year);
+                        if (slug != null)
+                            movie.Slug = slug;
+                        else
+                            movie.Slug = movie.Id.ToString();
+
                         string? url = FileVideoUrl(d);
-                        if (url == null) movie.VideoUrl = "<Not Found>";
-                        else movie.VideoUrl = url;
+                        if (url == null) 
+                            movie.VideoUrl = "<Not Found>";
+                        else 
+                            movie.VideoUrl = url;
+
                         await AddMovieAsync(movie);
                     }
                     else
@@ -87,5 +97,13 @@ namespace AmethystScreen.Services
 
             return null;
         }
+
+        private static string GenerateSlug(string title, int year)
+        {
+            string slug = $"{title.ToLower().Replace(" ", "-")}-{year}";
+            slug = slug.Replace(":", "");
+            return slug;
+        }
+
     }
 }

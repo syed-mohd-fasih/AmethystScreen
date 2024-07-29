@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AmethystScreen.Controllers
 {
+    [Authorize]
     public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService) : Controller
     {
         private readonly AppDbContext _context = context;
@@ -22,17 +23,17 @@ namespace AmethystScreen.Controllers
         }
 
         // GET: Library/Movie/<id>
-        public async Task<IActionResult> Movie(int id)
+        public async Task<IActionResult> Movie(string slug)
         {
-            if (id == 0)
+            if (slug == null)
             {
-                _logger.LogWarning($"{nameof(Movie)}: ID:0 access attempt");
+                _logger.LogWarning($"{nameof(Movie)}: null access attempt {slug}");
                 return NotFound();
             }
 
-            if (MovieExists(id))
+            if (MovieExists(slug))
             {
-                var movie = await _context.Movies.FirstOrDefaultAsync(x => x.Id == id);
+                var movie = await _context.Movies.FirstOrDefaultAsync(x => x.Slug == slug);
                 if (movie == null)
                 {
                     _logger.LogError($"{nameof(Movie)}: Movie couldn't be retrieved from context");
@@ -40,13 +41,13 @@ namespace AmethystScreen.Controllers
                 }
                 else
                 {
-                    _logger.LogInformation($"{nameof(Movie)}: {movie.Id}:{movie.Title} was accessed");
+                    _logger.LogInformation($"{nameof(Movie)}: {movie.Slug}: was accessed");
                     return View(movie);
                 }
             }
             else
             {
-                _logger.LogError($"{nameof(Movie)}: Movie {id} not found in context");
+                _logger.LogError($"{nameof(Movie)}: {slug} not found in context");
                 return RedirectToAction(nameof(Index));
             }
         }
@@ -92,9 +93,9 @@ namespace AmethystScreen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MovieExists(int id)
+        private bool MovieExists(string slug)
         {
-            return _context.Movies.Any(e => e.Id == id);
+            return _context.Movies.Any(e => e.Slug == slug);
         }
     }
 }
