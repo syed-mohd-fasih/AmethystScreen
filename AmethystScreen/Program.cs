@@ -28,6 +28,7 @@ namespace AmethystScreen
                 .AddDefaultTokenProviders();
             builder.Services.AddScoped<MoviesDirectoryService>();
             builder.Services.AddScoped<CommentsService>();
+            builder.Services.AddScoped<LikesService>();
 
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();

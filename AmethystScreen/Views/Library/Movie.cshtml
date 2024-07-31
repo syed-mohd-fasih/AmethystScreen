@@ -1,4 +1,5 @@
 ﻿@model AmethystScreen.ViewModels.MovieDetails
+@using AmethystScreen.Services;
 @{
     ViewData["Title"] = Model.Movie.Title;
 }
@@ -95,12 +96,11 @@
             z-index: 10;
             transition: transform 0.5s ease-in-out;
             display: block;
-            
-            img 
-            {
-                width: 100px;
-                height: 100px;
-            }
+        }
+
+        #custom-play-button img {
+            width: 100px;
+            height: 100px;
         }
 
         #custom-play-button:hover {
@@ -125,6 +125,11 @@
 
         .btn-close:hover {
             opacity: 1;
+        }
+
+        .like-icon {
+            height: 25px;
+            width: 25px;
         }
     </style>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
@@ -201,6 +206,35 @@
         <source src="/library/video/@Model.Movie.VideoUrl" type="video/mpeg">
         Your browser does not support the video tag.
     </video>
+</div>
+
+<div class="likes-container mt-2">
+    <form method="post" asp-action="LikeMovie" asp-controller="Library">
+        <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
+        <button class="btn bg-bv">
+            <div class="d-flex flex-row m-auto">
+                @if (Model.IsLikedByUser)
+                {
+                    <img src="~/assets/like.png" class="like-icon" />
+                }
+                else
+                {
+                    <img src="~/assets/heart.png" class="like-icon" />
+                }
+                <span class="m-auto ms-2">
+                    @if (Model.IsLikedByUser)
+                    {
+                        <span>Unlike</span>
+                    }
+                    else
+                    {
+                        <span>Like</span>
+                    }
+                    <span class="m-auto ms-2">@Model.Movie.Likes</span>
+                </span>
+            </div>
+        </button>
+    </form>
 </div>
 
 <div id="comments-container" class="mt-3">

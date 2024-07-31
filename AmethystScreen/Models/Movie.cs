@@ -17,5 +17,6 @@ namespace AmethystScreen.Models
         public string VideoUrl { get; set; } = string.Empty;
         public string Language { get; set; } = string.Empty;
         public string Slug {  get; set; } = string.Empty;
+        public int Likes { get; set; }
     }
 }

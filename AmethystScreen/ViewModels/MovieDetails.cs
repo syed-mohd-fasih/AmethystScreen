@@ -1,4 +1,5 @@
 ﻿using AmethystScreen.Models;
+using Microsoft.Identity.Client;
 
 namespace AmethystScreen.ViewModels
 {
@@ -6,5 +7,6 @@ namespace AmethystScreen.ViewModels
     {
         public required Movie Movie { get; set; }
         public required List<Comment> Comments { get; set; }
+        public required bool IsLikedByUser { get; set; }
     }
 }

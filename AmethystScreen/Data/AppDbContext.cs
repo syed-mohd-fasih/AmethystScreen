@@ -8,5 +8,6 @@ namespace AmethystScreen.Data
             : base(options) { }
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
     }
 }

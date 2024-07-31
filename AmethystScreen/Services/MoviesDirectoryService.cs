@@ -70,6 +70,8 @@ namespace AmethystScreen.Services
                         else 
                             movie.VideoUrl = url;
 
+                        movie.Likes = 0;
+
                         await AddMovieAsync(movie);
                     }
                     else
