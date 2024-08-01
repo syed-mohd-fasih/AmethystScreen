@@ -14,18 +14,23 @@ namespace AmethystScreen
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystMovieContext")));
             builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystUserContext")));
+            
             builder.Services.AddDefaultIdentity<User>(
                 options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
                     options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
+            
+
             builder.Services.AddScoped<MoviesDirectoryService>();
             builder.Services.AddScoped<CommentsService>();
             builder.Services.AddScoped<LikesService>();
@@ -69,6 +74,7 @@ namespace AmethystScreen
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<AppDbContext>();
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 context.Database.Migrate();
 
                 // To seed Db
@@ -77,9 +83,29 @@ namespace AmethystScreen
                     var movieService = scope.ServiceProvider.GetRequiredService<MoviesDirectoryService>();
                     await movieService.ImportMoviesFromDirectoryAsync();
                 }
+
+                // To seed users
+                await RoleSeeder.SeedRolesAsync(roleManager);
             }
 
             app.Run();
+        }
+    }
+
+    public class RoleSeeder
+    {
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            string[] roleNames = { "SuperUser", "Admin", "User", "Moderator" };
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
         }
     }
 }
