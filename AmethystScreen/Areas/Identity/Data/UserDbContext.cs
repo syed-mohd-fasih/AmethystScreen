@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using AmethystScreen.Models;
 
 namespace AmethystScreen.Data;
 
@@ -20,6 +19,4 @@ public class UserDbContext : IdentityDbContext<User>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
-
-public DbSet<AmethystScreen.Models.Movie> Movie { get; set; } = default!;
 }

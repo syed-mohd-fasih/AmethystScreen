@@ -3,8 +3,6 @@ using AmethystScreen.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using AmethystScreen.Areas.Identity.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace AmethystScreen
 {
@@ -16,14 +14,11 @@ namespace AmethystScreen
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();
-
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystMovieContext")));
             builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystUserContext")));
-            
-            builder.Services.AddIdentity<User, IdentityRole>(
+            builder.Services.AddDefaultIdentity<User>(
                 options =>
                 {
                     options.SignIn.RequireConfirmedAccount = true;
@@ -31,24 +26,9 @@ namespace AmethystScreen
                 })
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
-            builder.Services.AddAuthorization(options =>
-            {
-                options.AddPolicy("SuperUserPolicy", policy => policy.RequireRole("SuperUser"));
-                options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin", "SuperUser"));
-                options.AddPolicy("UserPolicy", policy => policy.RequireRole("User", "SuperUser"));
-                options.AddPolicy("ModeratorPolicy", policy => policy.RequireRole("Moderator", "SuperUser"));
-            });
-            builder.Services.AddAuthentication();
-            builder.Services.ConfigureApplicationCookie(options =>
-            {
-                options.LoginPath = "/Identity/Account/Login";
-                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-            });
-            
             builder.Services.AddScoped<MoviesDirectoryService>();
             builder.Services.AddScoped<CommentsService>();
             builder.Services.AddScoped<LikesService>();
-            builder.Services.AddSingleton<IEmailSender, MockEmailSenderService>();
 
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
@@ -88,23 +68,11 @@ namespace AmethystScreen
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var appContext = services.GetRequiredService<AppDbContext>();
-                var userContext = services.GetRequiredService<UserDbContext>();
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                var userManager = services.GetRequiredService<UserManager<User>>();
-
-                appContext.Database.Migrate();
-                userContext.Database.Migrate();
-
-                string[] roles = { "SuperUser", "Admin", "User", "Moderator" };
-                foreach(var role in roles)
-                {
-                    if (!await roleManager.RoleExistsAsync(role))
-                        await roleManager.CreateAsync(new IdentityRole(role));
-                }
+                var context = services.GetRequiredService<AppDbContext>();
+                context.Database.Migrate();
 
                 // To seed Db
-                if (appContext.Movies.Count() <= 0)
+                if (context.Movies.Count() <= 0)
                 {
                     var movieService = scope.ServiceProvider.GetRequiredService<MoviesDirectoryService>();
                     await movieService.ImportMoviesFromDirectoryAsync();
@@ -115,4 +83,3 @@ namespace AmethystScreen
         }
     }
 }
-    
