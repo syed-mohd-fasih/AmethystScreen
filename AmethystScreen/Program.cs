@@ -29,7 +29,13 @@ namespace AmethystScreen
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<UserDbContext>()
                 .AddDefaultTokenProviders();
-            
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("superuser", policy => policy.RequireRole("SuperUser"));
+                options.AddPolicy("admin", policy => policy.RequireRole("SuperUser", "Admin"));
+                options.AddPolicy("moderator", policy => policy.RequireRole("SuperUser", "Admin", "Moderator"));
+                options.AddPolicy("user", policy => policy.RequireRole("SuperUser", "Admin", "Moderator", "User"));
+            });
 
             builder.Services.AddScoped<MoviesDirectoryService>();
             builder.Services.AddScoped<CommentsService>();
