@@ -56,7 +56,7 @@ namespace AmethystScreen.Services
                     var movie = JsonSerializer.Deserialize<Movie>(json, options);
                     if (movie != null)
                     {
-                        _logger.LogWarning($"{nameof(ImportMoviesFromDirectoryAsync)}: looking for video in directory for {movie.Title}");
+                        _logger.LogInformation($"{nameof(ImportMoviesFromDirectoryAsync)}: looking for video in directory for {movie.Title}");
                         
                         string slug = GenerateSlug(movie.Title, movie.Year);
                         if (slug != null)
