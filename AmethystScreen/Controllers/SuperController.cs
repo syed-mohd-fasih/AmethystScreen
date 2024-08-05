@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using AmethystScreen.Data;
 using AmethystScreen.Models;
 using Microsoft.AspNetCore.Authorization;
+using AmethystScreen.Services;
+using System.Security.Claims;
 
 namespace AmethystScreen.Controllers
 {
@@ -15,16 +17,19 @@ namespace AmethystScreen.Controllers
     public class SuperController : Controller
     {
         private readonly AppDbContext _context;
-
-        public SuperController(AppDbContext context)
+        private readonly UserDbContext _userContext;
+        private readonly RolesService _rolesService;
+        public SuperController(AppDbContext context, UserDbContext userDbContext,  RolesService rolesService)
         {
             _context = context;
+            _userContext = userDbContext;
+            _rolesService = rolesService;
         }
 
         // GET: Super
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(await _rolesService.GetUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
 
         // GET: Super/Details/5

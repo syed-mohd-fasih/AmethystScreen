@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using AmethystScreen.Data;
 using AmethystScreen.Models;
 using Microsoft.AspNetCore.Authorization;
+using AmethystScreen.Services;
+using System.Security.Claims;
 
 namespace AmethystScreen.Controllers
 {
@@ -15,16 +17,18 @@ namespace AmethystScreen.Controllers
     public class AdminController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly RolesService _rolesService;
 
-        public AdminController(AppDbContext context)
+        public AdminController(AppDbContext context, RolesService roleService)
         {
             _context = context;
+            _rolesService = roleService;
         }
 
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(await _rolesService.GetUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
 
         // GET: Admin/Details/5
