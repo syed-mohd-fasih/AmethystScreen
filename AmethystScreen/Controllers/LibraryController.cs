@@ -10,7 +10,7 @@ using AmethystScreen.Areas.Identity.Data;
 
 namespace AmethystScreen.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "user")]
     public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService, CommentsService commentsService, LikesService likesService) : Controller
     {
         private readonly AppDbContext _moviecontext = context;
