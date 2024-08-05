@@ -1,14 +1,30 @@
 ﻿@model AmethystScreen.Models.Comment
 
 <div class="comment">
-    <p>@Model.CommentBy</p>
-    <p>@Model.CreatedAt.ToShortTimeString()</p>
-    <p>@Model.Content</p>
+    <div class="row justify-content-evenly">
+        <div class="comment-avatar p-0 d-flex justify-content-center align-items-center">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" alt="User">
+        </div>
+        <div class="comment-box col ms-2">
+            <div class="comment-head">
+                <h6 class="comment-name">@Model.CommentBy</h6>
+                <span>@Model.CreatedAt</span>
+            </div>
+            <div class="comment-content">
+                @Model.Content
+            </div>
+        </div>
+    </div>
+
     @if(Model.Replies != null && Model.Replies.Any())
     {
+        <ul class="comments-list reply-list">
         @foreach(var Reply in Model.Replies)
-        {   
-            <partial name="_CommentPartial" model="Reply" />
+        { 
+            <li>
+                <partial name="_CommentPartial" model="Reply" class="comment-list reply-list" />
+            </li>
         }
+        </ul>
     }
 </div>
