@@ -81,18 +81,24 @@ namespace AmethystScreen
             {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<AppDbContext>();
+                var userContext = services.GetRequiredService<UserDbContext>();
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                context.Database.Migrate();
 
-                // To seed Db
-                if (context.Movies.Count() <= 0)
+                context.Database.Migrate();
+                userContext.Database.Migrate();
+
+                // To seed Movies
+                if (!context.Movies.Any())
                 {
                     var movieService = scope.ServiceProvider.GetRequiredService<MoviesDirectoryService>();
                     await movieService.ImportMoviesFromDirectoryAsync();
                 }
 
-                // To seed users
-                await RoleSeeder.SeedRolesAsync(roleManager);
+                // To seed Users
+                if (!userContext.Roles.Any())
+                {
+                    await RoleSeeder.SeedRolesAsync(roleManager);
+                }
             }
 
             app.Run();
