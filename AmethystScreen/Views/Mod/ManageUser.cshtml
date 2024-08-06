@@ -1,0 +1,23 @@
+﻿@model AmethystScreen.Areas.Identity.Data.User
+
+@{
+    ViewData["Title"] = "Manage User";
+}
+
+<h1>Manage Profile (Mod)</h1>
+
+<h4>User</h4>
+<hr />
+<div >
+    <p>
+        @Model.UserName
+    </p>
+</div>
+
+<div>
+    <a asp-action="Index">Back to ModDash</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

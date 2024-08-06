@@ -28,7 +28,7 @@ namespace AmethystScreen.Controllers
         // GET: Admin
         public async Task<IActionResult> Index()
         {
-            return View(await _rolesService.GetUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            return View(await _rolesService.GetAllUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
 
         // GET: Admin/Details/5

@@ -1,47 +1,88 @@
-﻿@model IEnumerable<AmethystScreen.Areas.Identity.Data.User>
-
+﻿@model AmethystScreen.ViewModels.ModeratorDashboard
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Mod Dashboard";
 }
 
-<h1>Index</h1>
+<h2>Moderator Dashboard</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+@if(Model.Users.Any())
+{
+<h3>User Management</h3>
+<table>
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th></th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>
+                    <a asp-action="ManageUser" asp-route-userId="@user.Id">Manage</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+}
+
+@if(Model.ReportedContent.Any())
+{
+<h3>Reported Content</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Content ID</th>
+            <th>Reported By</th>
+            <th>Reason</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model.ReportedContent)
+        {
+            <tr>
+                <td>@report.Id</td>
+                <td>@report.ReportedByUserId</td>
+                <td>@report.Description</td>
+                <td>
+                    <a asp-action="ReviewReport" asp-route-contentId="@report.Id">Review</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+@if(Model.RecentActivity.Any())
+{
+<h3>Recent Activity</h3>
+<ul>
+    @foreach (var activity in Model.RecentActivity)
+    {
+        <li>@activity.Content</li>
+        <li>
+            <a asp-action="ReviewActivity" asp-route-id="@activity.Id">Review</a>
+        </li>
+    }
+</ul>
+}
+
+@if(Model.Feedbacks.Any())
+{
+<h3>Feedbacks</h3>
+<ul>
+    @foreach(var feedback in Model.Feedbacks)
+    {
+        <li>@feedback.Description</li>
+        <li>
+            <a asp-action="ReviewFeedback" asp-route-id="@feedback.Id" >Review</a>
+        </li>
+    }
+</ul>
+}

@@ -1,0 +1,31 @@
+﻿@model AmethystScreen.Models.Feedback
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+<h1 class="fc-bv">@ViewData["Title"]</h1>
+
+<div class="form-card p-5 fc-bv">
+    <form id="account" method="post">
+        <h2>Leave a feedback for us!</h2>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="form-floating mb-3">
+            <input name="title" class="form-control" aria-required="true" placeholder="Provide a title..." />
+            <label asp-for="Title" class="form-label">Title</label>
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-floating mb-3">
+            <input name="description" class="form-control" aria-required="true" placeholder="Write your feedback here..." />
+            <label asp-for="Description" class="form-label">Description</label>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div>
+            <button asp-action="SaveFeedback" type="submit" class="w-100 btn btn-lg bg-bv">Submit</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

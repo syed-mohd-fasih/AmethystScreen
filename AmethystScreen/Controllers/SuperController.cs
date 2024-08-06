@@ -29,7 +29,7 @@ namespace AmethystScreen.Controllers
         // GET: Super
         public async Task<IActionResult> Index()
         {
-            return View(await _rolesService.GetUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            return View(await _rolesService.GetAllUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
         }
 
         // GET: Super/Details/5
