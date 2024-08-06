@@ -1,5 +1,6 @@
 ﻿using AmethystScreen.Areas.Identity.Data;
 using AmethystScreen.Data;
+using AmethystScreen.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AmethystScreen.Services
@@ -20,12 +21,14 @@ namespace AmethystScreen.Services
 
     public class RolesService
     {
-        private readonly UserDbContext _context;
+        private readonly UserDbContext _userContext;
+        private readonly AppDbContext _appContext;
         private readonly Roles[] _roles;
 
-        public RolesService(UserDbContext context)
+        public RolesService(UserDbContext userContext, AppDbContext appContext)
         {
-            _context = context;
+            _userContext = userContext;
+            _appContext = appContext;
 
             _roles = new Roles[4];
 
@@ -39,10 +42,10 @@ namespace AmethystScreen.Services
 
         private void SetRoles()
         {
-            var userRole = _context.Roles.FirstOrDefault(r => r.Name == "User");
-            var moderatorRole = _context.Roles.FirstOrDefault(r => r.Name == "Moderator");
-            var adminRole = _context.Roles.FirstOrDefault(r => r.Name == "Admin");
-            var superUserRole = _context.Roles.FirstOrDefault(r => r.Name == "SuperUser");
+            var userRole = _userContext.Roles.FirstOrDefault(r => r.Name == "User");
+            var moderatorRole = _userContext.Roles.FirstOrDefault(r => r.Name == "Moderator");
+            var adminRole = _userContext.Roles.FirstOrDefault(r => r.Name == "Admin");
+            var superUserRole = _userContext.Roles.FirstOrDefault(r => r.Name == "SuperUser");
 
             if (userRole != null) _roles[0].SetRoleItem(0, "User", userRole.Id);
             if (moderatorRole != null) _roles[1].SetRoleItem(1, "Moderator", moderatorRole.Id);
@@ -50,9 +53,9 @@ namespace AmethystScreen.Services
             if (superUserRole != null) _roles[3].SetRoleItem(3, "SuperUser", superUserRole.Id);
         }
 
-        public async Task<List<User>> GetUsersAsync(string? accessorUserId)
+        public async Task<List<User>> GetAllUsersAsync(string? accessorUserId)
         {
-            var authUserRoleId = _context.UserRoles.FirstOrDefault(u  => u.UserId == accessorUserId)?.RoleId;
+            var authUserRoleId = _userContext.UserRoles.FirstOrDefault(u  => u.UserId == accessorUserId)?.RoleId;
             var accessorRole = _roles.FirstOrDefault(r => r.Id == authUserRoleId);
             if (accessorRole == null) return new List<User>();
 
@@ -60,10 +63,10 @@ namespace AmethystScreen.Services
 
             List<User> users = new List<User>();
 
-            var userList = await _context.Users.ToListAsync();
+            var userList = await _userContext.Users.ToListAsync();
             foreach (var user in userList)
             {
-                var userRoleId = await _context.UserRoles
+                var userRoleId = await _userContext.UserRoles
                     .Where(r => r.UserId == user.Id)
                     .Select(r => r.RoleId)
                     .FirstOrDefaultAsync();
@@ -80,6 +83,20 @@ namespace AmethystScreen.Services
             return users;
         }
 
+        public async Task<List<ReportedContent>> GetReportedContentAsync()
+        {
+            return await _appContext.ReportedContent.ToListAsync();
+        }
+
+        public async Task<List<Feedback>> GetFeedbackAsync()
+        {
+            return await _appContext.Feedbacks.ToListAsync();
+        }
+
+        public async Task<List<ContentActivity>> GetRecentActivityAsync()
+        {
+            return await _appContext.ContentActivities.ToListAsync();
+        }
     }
 
 }
