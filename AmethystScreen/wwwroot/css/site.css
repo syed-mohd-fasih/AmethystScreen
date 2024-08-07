@@ -37,9 +37,15 @@ header, footer {
 }
 
 .bg-bv {
-    border: none;
+    border: 1px solid blueviolet;
     background-color: blueviolet;
     color: black;
+}
+
+.bg-blk {
+    border: 1px solid blueviolet;
+    background-color: black;
+    color: blueviolet;
 }
 
 @media (min-width: 768px) {

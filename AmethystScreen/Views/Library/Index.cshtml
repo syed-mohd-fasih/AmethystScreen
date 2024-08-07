@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AmethystScreen.Models.Movie>
+﻿@model AmethystScreen.ViewModels.LibraryPagination
 @{
     ViewData["Title"] = "Library";
 }
@@ -21,12 +21,26 @@
     #search-bar {
         border: 1px solid blueviolet;
     }
+
+    .pagin-link {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 38px;
+        width: 35px;
+    }
+
+    .unaccessible{
+        border: 1px solid dimgrey;
+        color: dimgrey;
+        cursor: not-allowed;
+    }
 </style>
 
 <div class="align-content-center">
-    <form asp-action="SearchResult" class="mb-3">
+    <form method="get" class="mb-3">
         <div class="input-group">
-            <input type="search" class="form-control search-bar bg-black text-light rounded-start-pill" id="search-bar" name="SearchTitle" placeholder="Search Title" />
+            <input type="search" class="form-control search-bar bg-black text-light rounded-start-pill" id="search-bar" name="searchTitle" placeholder="Search Title" />
             <input type="submit" value="Search" class="btn text-dark rounded-start-pill bg-bv" />
         </div>
     </form>
@@ -36,9 +50,9 @@
 
 <div class="main-body w-100 h-100 g-1">
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
-        @if (Model.Count() > 0)
+        @if (Model.Movies.Count() > 0)
         {
-            @foreach (var movie in Model)
+            @foreach (var movie in Model.Movies)
             {
                 <div class="col g-4 d-flex justify-content-around align-items-center">
                     <div class="card">
@@ -59,4 +73,38 @@
             </div>
         }
     </div>
+</div>
+
+<div class="w-100 justify-content-center align-items-center mt-3">
+    <ul class="pagination prevent-select m-auto justify-content-center">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item"><a class="pagin-link bg-blk rounded-start" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)">&laquo;</a></li>
+        }
+        else
+        {
+            <li class="page-item"><span class="pagin-link bg-blk rounded-start unaccessible">&laquo;</span></li>
+        }
+
+        @if((Model.CurrentPage - 1) >= 1)
+        {
+            <li class="page-item"><a class="pagin-link bg-blk" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)">@(Model.CurrentPage - 1)</a></li>
+        }
+        
+        <li class="page-item"><a class="pagin-link bg-bv" href="#">@Model.CurrentPage</a></li>
+        
+        @if((Model.CurrentPage + 1) <= Model.TotalPages)
+        {
+            <li class="page-item"><a class="pagin-link bg-blk" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)">@(Model.CurrentPage + 1)</a></li>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item"><a class="pagin-link bg-blk rounded-end" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)">&raquo;</a></li>
+        }
+        else
+        {
+            <li class="page-item"><span class="pagin-link bg-blk rounded-end unaccessible">&raquo;</span></li>
+        }
+    </ul>
 </div>

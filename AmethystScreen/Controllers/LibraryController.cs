@@ -13,18 +13,38 @@ namespace AmethystScreen.Controllers
     [Authorize(Policy = "user")]
     public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService, CommentsService commentsService, LikesService likesService) : Controller
     {
-        private readonly AppDbContext _moviecontext = context;
+        private readonly AppDbContext _movieContext = context;
         private readonly ILogger<LibraryController> _logger = logger;
         private readonly MoviesDirectoryService _movieDirectoryService = moviesDirectoryService;
         private readonly CommentsService _commentsService = commentsService;
         private readonly LikesService _likesService = likesService;
 
         // GET: Library
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string searchTitle, int pageNumber = 1, int pageSize = 8)
         {
-            _logger.LogInformation($"{nameof(Index)}: getting movies to controller");
-            var movies = await _movieDirectoryService.GetMoviesAsync();
-            return View(movies);
+            var movies = _movieContext.Movies.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTitle))
+            {
+                movies = movies.Where(m => m.Title.ToLower().Contains(searchTitle.ToLower()));
+            }
+
+            var paginatedMovies = movies
+                .OrderBy(m => m.Title)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var totalMovies = movies.Count();
+
+            var viewModel = new LibraryPagination
+            {
+                Movies = paginatedMovies,
+                CurrentPage = pageNumber,
+                TotalPages = (int)Math.Ceiling(totalMovies / (double)pageSize)
+            };
+
+            return View(viewModel);
         }
 
         // GET: Library/Movie/<id/slug>
@@ -38,7 +58,7 @@ namespace AmethystScreen.Controllers
 
             if (MovieExists(slug))
             {
-                var movie = await _moviecontext.Movies.FirstOrDefaultAsync(x => x.Slug == slug);
+                var movie = await _movieContext.Movies.FirstOrDefaultAsync(x => x.Slug == slug);
                 if (movie == null)
                 {
                     _logger.LogError($"{nameof(Movie)}: Movie couldn't be retrieved from context");
@@ -76,7 +96,7 @@ namespace AmethystScreen.Controllers
         // GET: Library/SearchResult
         public IActionResult SearchResult(string SearchTitle)
         {
-            var movieList = _moviecontext.Movies.Where(m => m.Title.Contains(SearchTitle)).ToList();
+            var movieList = _movieContext.Movies.Where(m => m.Title.Contains(SearchTitle)).ToList();
 
             if (movieList.Count == 0)
             {
@@ -118,7 +138,7 @@ namespace AmethystScreen.Controllers
                 return RedirectToAction("Movie", new { Slug = movieSlug });
             }
 
-            var movie = await _moviecontext.Movies.FirstOrDefaultAsync(m => m.Slug == movieSlug);
+            var movie = await _movieContext.Movies.FirstOrDefaultAsync(m => m.Slug == movieSlug);
             if (movie == null)
             {
                 _logger.LogError($"{nameof(AddComment)}: {movieSlug} not found in context");
@@ -141,8 +161,8 @@ namespace AmethystScreen.Controllers
                 CreatedAt = DateTime.Now
             };
 
-            _moviecontext.Comments.Add(comment);
-            await _moviecontext.SaveChangesAsync();
+            _movieContext.Comments.Add(comment);
+            await _movieContext.SaveChangesAsync();
             _logger.LogInformation($"{nameof(AddComment)}: Comment added to Db");
 
             return RedirectToAction("Movie", new { slug = movieSlug });
@@ -188,7 +208,7 @@ namespace AmethystScreen.Controllers
 
         private bool MovieExists(string slug)
         {
-            return _moviecontext.Movies.Any(e => e.Slug == slug);
+            return _movieContext.Movies.Any(e => e.Slug == slug);
         }
     }
 }
