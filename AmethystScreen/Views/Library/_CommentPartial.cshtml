@@ -14,6 +14,16 @@
                 @Model.Content
             </div>
         </div>
+        <div class="add-comment mt-2">
+            <form method="post" asp-action="ReplyTo" asp-controller="Library" class="mb-3">
+                <div class="input-group">
+                    <input type="hidden" name="movieSlug" value="@Model.MovieSlug" />
+                    <input type="hidden" name="parentCommentId" value="@Model.Id" />
+                    <input type="text" class="form-control bg-black text-light rounded-start-pill" name="content" placeholder="Drop your comment here..." />
+                    <input type="submit" value="Search" class="btn text-dark rounded-start-pill bg-bv" />
+                </div>
+            </form>
+        </div>
     </div>
 
     @if(Model.Replies != null && Model.Replies.Any())

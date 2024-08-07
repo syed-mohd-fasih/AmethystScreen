@@ -119,13 +119,13 @@ namespace AmethystScreen.Controllers
             {
                 _logger.LogWarning($"{nameof(AddComment)}: Comment cannot be empty");
                 TempData["Error"] = "Comment cannot be empty.";
-                return RedirectToAction("Movie", new { Slug = movieSlug });
+                return RedirectToAction("Movie", new { slug = movieSlug });
             }
 
             var movie = await _movieContext.Movies.FirstOrDefaultAsync(m => m.Slug == movieSlug);
             if (movie == null)
             {
-                _logger.LogError($"{nameof(AddComment)}: {movieSlug} not found in context");
+                _logger.LogError($"{nameof(AddComment)}: Movie: {movieSlug} not found in context");
                 return NotFound();
             }
 
@@ -148,6 +148,55 @@ namespace AmethystScreen.Controllers
             _movieContext.Comments.Add(comment);
             await _movieContext.SaveChangesAsync();
             _logger.LogInformation($"{nameof(AddComment)}: Comment added to Db");
+
+            return RedirectToAction("Movie", new { slug = movieSlug });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ReplyTo(string movieSlug, string content, int parentCommentId)
+        {
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                _logger.LogWarning($"{nameof(ReplyTo)}: Reply cannot be empty");
+                TempData["Error"] = "Reply cannot be empty.";
+                return RedirectToAction("Movie", new { slug = movieSlug });
+            }
+
+            var movie = await _movieContext.Movies.FirstOrDefaultAsync(m => m.Slug == movieSlug);
+            if (movie == null)
+            {
+                _logger.LogError($"{nameof(ReplyTo)}: Movie: {movieSlug} not found in context");
+                return NotFound();
+            }
+
+            string? name = null;
+            if(User.Identity != null)
+            {
+                name = User.Identity.Name;
+            }
+            name ??= "Anonymous";
+
+            var parentComment = await _movieContext.Comments.FirstOrDefaultAsync(pc => pc.Id == parentCommentId);
+
+            if (parentComment == null)
+            {
+                _logger.LogError($"{nameof(ReplyTo)}: Parent comment id:{parentCommentId} not found in context");
+                return RedirectToAction("Movie", new { slug = movieSlug });
+            }
+
+            var reply = new Comment
+            {
+                CommentBy = name,
+                MovieSlug = movie.Slug,
+                Content = content,
+                ParentCommentId = parentCommentId,
+                CreatedAt = DateTime.Now
+            };
+
+            parentComment.Replies.Add(reply);
+
+            await _movieContext.SaveChangesAsync();
+            _logger.LogInformation($"{nameof(ReplyTo)}: Reply added to Db");
 
             return RedirectToAction("Movie", new { slug = movieSlug });
         }
