@@ -27,7 +27,7 @@ namespace AmethystScreen.Controllers
             return View(movies);
         }
 
-        // GET: Library/Movie/<id>
+        // GET: Library/Movie/<id/slug>
         public async Task<IActionResult> Movie(string slug)
         {
             if (slug == null)
@@ -100,6 +100,7 @@ namespace AmethystScreen.Controllers
             {
                 var fileExtension = Path.GetExtension(filePath);
                 var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+                Response.Headers["Accept-Ranges"] = "bytes";
                 return File(fileStream, _movieDirectoryService.MimeTypes[fileExtension.ToLowerInvariant()]);
             }
 
@@ -144,7 +145,7 @@ namespace AmethystScreen.Controllers
             await _moviecontext.SaveChangesAsync();
             _logger.LogInformation($"{nameof(AddComment)}: Comment added to Db");
 
-            return RedirectToAction("Movie", new { Slug = movieSlug });
+            return RedirectToAction("Movie", new { slug = movieSlug });
         }
 
         public async Task<IActionResult> LikeMovie(string movieSlug)
