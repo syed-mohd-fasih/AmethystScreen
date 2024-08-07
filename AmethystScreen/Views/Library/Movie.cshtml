@@ -333,13 +333,12 @@
 </div>
 
 <div class="add-comment mt-2">
-    <form method="post" asp-action="AddComment" asp-controller="Library">
-        <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
-        <div class="form-group">
-            <label for="commentContent" class="mb-1">Add a Comment:</label>
-            <textarea class="form-control mt-2 mb-3" id="commentContent" name="content" rows="1"></textarea>
+    <form method="post" asp-action="AddComment" asp-controller="Library" class="mb-3">
+        <div class="input-group">
+            <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
+            <input type="text" class="form-control bg-black text-light rounded-start-pill" name="content" placeholder="Drop your comment here..." />
+            <input type="submit" value="Search" class="btn text-dark rounded-start-pill bg-bv" />
         </div>
-        <button type="submit" class="btn bg-bv">Submit</button>
     </form>
 </div>
 
