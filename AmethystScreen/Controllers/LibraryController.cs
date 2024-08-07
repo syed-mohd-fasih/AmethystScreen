@@ -93,22 +93,6 @@ namespace AmethystScreen.Controllers
             }
         }
 
-        // GET: Library/SearchResult
-        public IActionResult SearchResult(string SearchTitle)
-        {
-            var movieList = _movieContext.Movies.Where(m => m.Title.Contains(SearchTitle)).ToList();
-
-            if (movieList.Count == 0)
-            {
-                return View(nameof(Index), movieList);
-            }
-            else
-            {
-                movieList = (List<Movie>)[];
-                return RedirectToAction(nameof(Index), movieList);
-            }
-        }
-
         [HttpGet("/library/video/{*fileName}")]
         public IActionResult Play(string fileName)
         {
@@ -204,6 +188,20 @@ namespace AmethystScreen.Controllers
             _logger.LogInformation($"{nameof(SyncMovies)}: syncing movies");
             await _movieDirectoryService.ImportMoviesFromDirectoryAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> ReportFromMenu(string movieSlug)
+        {
+            // get form input
+            // get user id
+            return View();
+        }
+
+        public async Task<IActionResult> ReportFromComments(string movieSlug)
+        {
+            // get form input
+            // get user id
+            return View();
         }
 
         private bool MovieExists(string slug)

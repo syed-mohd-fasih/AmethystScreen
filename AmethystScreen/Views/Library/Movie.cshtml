@@ -127,7 +127,7 @@
             opacity: 1;
         }
 
-        .like-icon {
+        .icon {
             height: 25px;
             width: 25px;
         }
@@ -293,18 +293,18 @@
     </video>
 </div>
 
-<div class="likes-container mt-2">
-    <form method="post" asp-action="LikeMovie" asp-controller="Library">
+<div class="menu-container d-flex flex-row m-auto mt-2">
+    <form class="m-1" method="post" asp-action="LikeMovie" asp-controller="Library">
         <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
         <button class="btn bg-bv">
             <div class="d-flex flex-row m-auto">
                 @if (Model.IsLikedByUser)
                 {
-                    <img src="~/assets/like.png" class="like-icon" />
+                    <img src="~/assets/like.png" class="icon" />
                 }
                 else
                 {
-                    <img src="~/assets/heart.png" class="like-icon" />
+                    <img src="~/assets/heart.png" class="icon" />
                 }
                 <span class="m-auto ms-2">
                     @if (Model.IsLikedByUser)
@@ -317,6 +317,16 @@
                     }
                     <span class="m-auto ms-2">@Model.Movie.Likes</span>
                 </span>
+            </div>
+        </button>
+    </form>
+
+    <form class="m-1" method="post" asp-action="Report" asp-controller="Library">
+        <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
+        <button class="btn bg-bv">
+            <div class="d-flex flex-row m-auto">
+                <img src="~/assets/flag.png" class="icon" />
+                <span class="m-auto ms-2">Report</span>
             </div>
         </button>
     </form>
