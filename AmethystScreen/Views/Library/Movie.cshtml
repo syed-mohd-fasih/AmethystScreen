@@ -351,6 +351,7 @@
     <form method="post" asp-action="AddComment" asp-controller="Library" class="mb-3">
         <div class="input-group">
             <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
+            <input type="hidden" name="parentCommentId" value="@null" />
             <input type="text" class="form-control bg-black text-light rounded-start" name="content" placeholder="Drop your comment here..." />
             <input type="submit" value="Comment" class="btn text-dark bg-bv" />
         </div>

@@ -139,18 +139,7 @@ namespace AmethystScreen.Controllers
             name ??= "Anonymous";
             id ??= "Anonymous";
 
-            var comment = new Comment
-            {
-                CommentByUsername = name,
-                CommentById = id,
-                MovieSlug = movie.Slug,
-                Content = content,
-                ParentCommentId = parentCommentId,
-                CreatedAt = DateTime.Now
-            };
-
-            _movieContext.Comments.Add(comment);
-            await _movieContext.SaveChangesAsync();
+            await _commentsService.AddCommentAsync(name, id, movieSlug, content, parentCommentId);
             _logger.LogInformation($"{nameof(AddComment)}: Comment added to Db");
 
             return RedirectToAction("Movie", new { slug = movieSlug });
@@ -191,20 +180,7 @@ namespace AmethystScreen.Controllers
             name ??= "Anonymous";
             id ??= "Anonymous";
 
-            var reply = new Comment
-            {
-                CommentByUsername = name,
-                CommentById = id,
-                MovieSlug = movie.Slug,
-                Content = content,
-                ParentCommentId = parentCommentId,
-                CreatedAt = DateTime.Now
-            };
-
-            parentComment.Replies.Add(reply);
-
-            await _movieContext.SaveChangesAsync();
-            _logger.LogInformation($"{nameof(ReplyTo)}: Reply added to Db");
+            await _commentsService.AddReplyAsync(name, id, movieSlug, content, parentCommentId, parentComment);
 
             return RedirectToAction("Movie", new { slug = movieSlug });
         }

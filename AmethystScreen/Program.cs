@@ -14,12 +14,12 @@ namespace AmethystScreen
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            
+
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystMovieContext")));
             builder.Services.AddDbContext<UserDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("AmethystUserContext")));
-            
+
             builder.Services.AddDefaultIdentity<User>(
                 options =>
                 {
