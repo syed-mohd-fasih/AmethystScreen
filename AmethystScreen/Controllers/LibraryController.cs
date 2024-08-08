@@ -130,15 +130,19 @@ namespace AmethystScreen.Controllers
             }
 
             string? name = null;
-            if(User.Identity != null)
+            string? id = null;
+            if (User.Identity != null)
             {
                 name = User.Identity.Name;
+                id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             }
             name ??= "Anonymous";
+            id ??= "Anonymous";
 
             var comment = new Comment
             {
-                CommentBy = name,
+                CommentByUsername = name,
+                CommentById = id,
                 MovieSlug = movie.Slug,
                 Content = content,
                 ParentCommentId = parentCommentId,
@@ -169,13 +173,6 @@ namespace AmethystScreen.Controllers
                 return NotFound();
             }
 
-            string? name = null;
-            if(User.Identity != null)
-            {
-                name = User.Identity.Name;
-            }
-            name ??= "Anonymous";
-
             var parentComment = await _movieContext.Comments.FirstOrDefaultAsync(pc => pc.Id == parentCommentId);
 
             if (parentComment == null)
@@ -184,9 +181,20 @@ namespace AmethystScreen.Controllers
                 return RedirectToAction("Movie", new { slug = movieSlug });
             }
 
+            string? name = null;
+            string? id = null;
+            if (User.Identity != null)
+            {
+                name = User.Identity.Name;
+                id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+            name ??= "Anonymous";
+            id ??= "Anonymous";
+
             var reply = new Comment
             {
-                CommentBy = name,
+                CommentByUsername = name,
+                CommentById = id,
                 MovieSlug = movie.Slug,
                 Content = content,
                 ParentCommentId = parentCommentId,
@@ -230,6 +238,11 @@ namespace AmethystScreen.Controllers
                 await _likesService.RemoveLike(movieSlug, userId);
             }
             return RedirectToAction(nameof(Movie), new { Slug = movieSlug });
+        }
+
+        public async Task<IActionResult> DeleteComment(int CommentId)
+        {
+            return View();
         }
 
         public async Task<IActionResult> SyncMovies()

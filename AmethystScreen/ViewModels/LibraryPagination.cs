@@ -4,7 +4,7 @@ namespace AmethystScreen.ViewModels
 {
     public class LibraryPagination
     {
-        public List<Movie> Movies { get; set; }
+        public List<Movie>? Movies { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 

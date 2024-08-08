@@ -132,6 +132,11 @@
             width: 25px;
         }
 
+        .icon-sm {
+            height: 20px;
+            width: 20px;
+        }
+
         .comments-list:before {
             content: '';
             width: 2px;
@@ -215,6 +220,16 @@
             position: relative;
             width: 100%;
             height: 100%;
+        }
+
+        .input-group.comments-input-group {
+            width: 80%;
+            left: 80px;
+            float: left;
+        }
+
+        .reply-field-container {
+            display: none;
         }
     </style>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
@@ -336,8 +351,8 @@
     <form method="post" asp-action="AddComment" asp-controller="Library" class="mb-3">
         <div class="input-group">
             <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
-            <input type="text" class="form-control bg-black text-light rounded-start-pill" name="content" placeholder="Drop your comment here..." />
-            <input type="submit" value="Search" class="btn text-dark rounded-start-pill bg-bv" />
+            <input type="text" class="form-control bg-black text-light rounded-start" name="content" placeholder="Drop your comment here..." />
+            <input type="submit" value="Comment" class="btn text-dark bg-bv" />
         </div>
     </form>
 </div>
@@ -403,6 +418,21 @@
                 playerControls.style.display = 'flex';
                 player.play();
             }
-        }); 
+        });
+
+        var comments = document.querySelectorAll('.comment');
+
+        comments.forEach(function (comment) {
+            var replyBtn = comment.querySelector('.reply-btn');
+            var replyFieldContainer = comment.querySelector('.reply-field-container');
+
+            replyBtn.addEventListener('click', function () {
+                if (replyFieldContainer.style.display === 'none' || replyFieldContainer.style.display === '') {
+                    replyFieldContainer.style.display = 'block';
+                } else {
+                    replyFieldContainer.style.display = 'none';
+                }
+            });
+        });
     });
 </script>

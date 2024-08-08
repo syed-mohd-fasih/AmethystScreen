@@ -1,31 +1,39 @@
 ﻿@model AmethystScreen.Models.Comment
 
 <div class="comment">
-    <div class="row justify-content-evenly">
+    <div class="row justify-content-evenly comment-body">
         <div class="comment-avatar p-0 d-flex justify-content-center align-items-center">
             <img src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" alt="User">
         </div>
         <div class="comment-box col ms-2">
             <div class="comment-head">
-                <h6 class="comment-name">@Model.CommentBy</h6>
+                <h6 class="comment-name">@Model.CommentByUsername</h6>
                 <span>@Model.CreatedAt</span>
+                <div class="float-end">
+                    <button class="bg-bv delete-btn" asp-action="DeleteComment" asp-controller="Library">
+                        <img class="icon-sm" src="~/assets/bin.png" alt="Delete" />
+                    </button>
+                    <button class="bg-bv reply-btn">
+                        <img class="icon-sm" src="~/assets/reply.png" alt="Reply" />
+                    </button>
+                </div>
             </div>
             <div class="comment-content">
                 @Model.Content
             </div>
         </div>
-        <div class="add-comment mt-2">
+        <div class="reply-field-container mt-2">
             <form method="post" asp-action="ReplyTo" asp-controller="Library" class="mb-3">
-                <div class="input-group">
+                <div class="input-group comments-input-group">
                     <input type="hidden" name="movieSlug" value="@Model.MovieSlug" />
                     <input type="hidden" name="parentCommentId" value="@Model.Id" />
-                    <input type="text" class="form-control bg-black text-light rounded-start-pill" name="content" placeholder="Drop your comment here..." />
-                    <input type="submit" value="Search" class="btn text-dark rounded-start-pill bg-bv" />
+                    <input type="text" class="form-control bg-black text-light rounded-start" name="content" placeholder="Drop your comment here..." />
+                    <input type="submit" value="Reply" class="btn text-dark bg-bv" />
                 </div>
             </form>
         </div>
     </div>
-
+    <div class="comment-replies">
     @if(Model.Replies != null && Model.Replies.Any())
     {
         <ul class="comments-list reply-list">
@@ -37,4 +45,5 @@
         }
         </ul>
     }
+    </div>
 </div>
