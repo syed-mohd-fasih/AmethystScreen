@@ -296,7 +296,7 @@
     <div id="custom-play-button">
         <img class="rotate-anim" src="~/assets/play_button.png" alt="Play" />
     </div>
-    <video id="movie-video" class="plyr m-0 p-0" controls>
+    <video id="movie-video" class="plyr m-0 p-0 prevent-select" controls>
         <source src="/library/video/@Model.Movie.VideoUrl" type="video/mp4">
         <source src="/library/video/@Model.Movie.VideoUrl" type="video/webm">
         <source src="/library/video/@Model.Movie.VideoUrl" type="video/x-msvideo">
@@ -393,13 +393,24 @@
         const mainEl = document.querySelector('main');
 
         imageEl.addEventListener('click', function () {
-            if (videoEl.classList.contains('visually-hidden')) {
-                videoEl.classList.remove('visually-hidden');
-                imageEl.style.display = 'none';
-                descEl.style.display = 'none';
-                buttonEl.style.display = 'none';
-                videoEl.style.display = 'flex';
-            }
+
+            fetch('/Library/CheckAuthorization')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.isAuthenticated) {
+                        if (videoEl.classList.contains('visually-hidden')) {
+                            videoEl.classList.remove('visually-hidden');
+                            imageEl.style.display = 'none';
+                            descEl.style.display = 'none';
+                            buttonEl.style.display = 'none';
+                            videoEl.style.display = 'flex';
+                        }
+                    } else {
+                        window.location.href = '/Identity/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                    }
+                })
+                .catch(error => console.error('Error checking authorization:', error));
         });
 
         const playbutton = document.getElementById('custom-play-button');
@@ -418,8 +429,11 @@
                 playbutton.style.display = 'none';
                 playerControls.style.display = 'flex';
                 player.play();
+            } else {
+                player.pause();
             }
         });
+
 
         var comments = document.querySelectorAll('.comment');
 

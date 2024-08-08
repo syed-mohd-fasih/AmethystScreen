@@ -10,7 +10,6 @@ using AmethystScreen.Areas.Identity.Data;
 
 namespace AmethystScreen.Controllers
 {
-    [Authorize(Policy = "user")]
     public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService, CommentsService commentsService, LikesService likesService) : Controller
     {
         private readonly AppDbContext _movieContext = context;
@@ -71,8 +70,14 @@ namespace AmethystScreen.Controllers
                     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     if (userId == null)
                     {
-                        _logger.LogWarning($"{nameof(Movie)}: User Id not found");
-                        return Unauthorized();
+                        _logger.LogWarning($"{nameof(Movie)}: User Id not found, visiting user pass");
+                        var viewModelTemp = new MovieDetails
+                        {
+                            Movie = movie,
+                            Comments = new List<Comment>(),
+                            IsLikedByUser = true
+                        };
+                        return View(viewModelTemp);
                     }
                     bool hasLiked = await _likesService.IsLiked(slug, userId);
 
@@ -93,6 +98,7 @@ namespace AmethystScreen.Controllers
             }
         }
 
+        [Authorize(Policy = "user")]
         [HttpGet("/library/video/{*fileName}")]
         public IActionResult Play(string fileName)
         {
@@ -112,6 +118,7 @@ namespace AmethystScreen.Controllers
             return NotFound();
         }
 
+        [Authorize(Policy = "user")]
         [HttpPost]
         public async Task<IActionResult> AddComment(string movieSlug, string content, int? parentCommentId = null)
         {
@@ -145,6 +152,7 @@ namespace AmethystScreen.Controllers
             return RedirectToAction("Movie", new { slug = movieSlug });
         }
 
+        [Authorize(Policy = "user")]
         [HttpPost]
         public async Task<IActionResult> ReplyTo(string movieSlug, string content, int parentCommentId)
         {
@@ -185,6 +193,7 @@ namespace AmethystScreen.Controllers
             return RedirectToAction("Movie", new { slug = movieSlug });
         }
 
+        [Authorize(Policy = "user")]
         public async Task<IActionResult> LikeMovie(string movieSlug)
         {
             if (movieSlug == null)
@@ -228,6 +237,7 @@ namespace AmethystScreen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //[Authorize(Policy = "user")]
         //public async Task<IActionResult> ReportFromMenu(string movieSlug)
         //{
         //    // get form input
@@ -235,6 +245,7 @@ namespace AmethystScreen.Controllers
         //    return View();
         //}
 
+        //[Authorize(Policy = "user")]
         //public async Task<IActionResult> ReportFromComments(string movieSlug)
         //{
         //    // get form input
@@ -245,6 +256,13 @@ namespace AmethystScreen.Controllers
         private bool MovieExists(string slug)
         {
             return _movieContext.Movies.Any(e => e.Slug == slug);
+        }
+
+        [HttpGet]
+        public JsonResult CheckAuthorization()
+        {
+            var isAuthenticated = User.Identity.IsAuthenticated;
+            return Json(new { isAuthenticated });
         }
     }
 }
