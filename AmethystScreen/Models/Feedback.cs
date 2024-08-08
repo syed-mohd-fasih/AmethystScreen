@@ -1,6 +1,4 @@
-﻿using System.Drawing;
-
-namespace AmethystScreen.Models
+﻿namespace AmethystScreen.Models
 {
     public class Feedback
     {

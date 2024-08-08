@@ -19,7 +19,7 @@ namespace AmethystScreen.Controllers
         private readonly AppDbContext _context;
         private readonly UserDbContext _userContext;
         private readonly RolesService _rolesService;
-        public SuperController(AppDbContext context, UserDbContext userDbContext,  RolesService rolesService)
+        public SuperController(AppDbContext context, UserDbContext userDbContext, RolesService rolesService)
         {
             _context = context;
             _userContext = userDbContext;

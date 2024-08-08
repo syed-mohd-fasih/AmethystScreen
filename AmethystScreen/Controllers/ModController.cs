@@ -56,7 +56,7 @@ namespace AmethystScreen.Controllers
                 return NotFound();
             }
 
-            var report= await _appContext.ReportedContent
+            var report = await _appContext.ReportedContent
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (report == null)
             {
@@ -91,7 +91,7 @@ namespace AmethystScreen.Controllers
 
             var activity = await _appContext.ContentActivities
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (activity== null)
+            if (activity == null)
             {
                 return NotFound();
             }
@@ -106,7 +106,7 @@ namespace AmethystScreen.Controllers
                 return NotFound();
             }
 
-            var feedback= await _appContext.Feedbacks
+            var feedback = await _appContext.Feedbacks
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (feedback == null)
             {

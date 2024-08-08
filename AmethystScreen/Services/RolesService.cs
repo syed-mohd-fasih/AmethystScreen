@@ -55,7 +55,7 @@ namespace AmethystScreen.Services
 
         public async Task<List<User>> GetAllUsersAsync(string? accessorUserId)
         {
-            var authUserRoleId = _userContext.UserRoles.FirstOrDefault(u  => u.UserId == accessorUserId)?.RoleId;
+            var authUserRoleId = _userContext.UserRoles.FirstOrDefault(u => u.UserId == accessorUserId)?.RoleId;
             var accessorRole = _roles.FirstOrDefault(r => r.Id == authUserRoleId);
             if (accessorRole == null) return new List<User>();
 

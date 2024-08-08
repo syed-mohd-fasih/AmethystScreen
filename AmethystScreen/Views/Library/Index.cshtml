@@ -30,7 +30,7 @@
         width: 35px;
     }
 
-    .unaccessible{
+    .unaccessible {
         border: 1px solid dimgrey;
         color: dimgrey;
         cursor: not-allowed;
@@ -86,14 +86,14 @@
             <li class="page-item"><span class="pagin-link bg-blk rounded-start unaccessible">&laquo;</span></li>
         }
 
-        @if((Model.CurrentPage - 1) >= 1)
+        @if ((Model.CurrentPage - 1) >= 1)
         {
             <li class="page-item"><a class="pagin-link bg-blk" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage - 1)">@(Model.CurrentPage - 1)</a></li>
         }
-        
+
         <li class="page-item"><a class="pagin-link bg-bv" href="#">@Model.CurrentPage</a></li>
-        
-        @if((Model.CurrentPage + 1) <= Model.TotalPages)
+
+        @if ((Model.CurrentPage + 1) <= Model.TotalPages)
         {
             <li class="page-item"><a class="pagin-link bg-blk" asp-action="Index" asp-route-pageNumber="@(Model.CurrentPage + 1)">@(Model.CurrentPage + 1)</a></li>
         }

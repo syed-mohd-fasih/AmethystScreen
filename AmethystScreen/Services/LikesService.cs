@@ -14,7 +14,7 @@ namespace AmethystScreen.Services
             if (!_context.Likes.Any(like => like.UserId == userId && like.MovieSlug == movieSlug))
             {
                 var movie = _context.Movies.FirstOrDefault(m => m.Slug == movieSlug);
-                if(movie != null)
+                if (movie != null)
                 {
                     like.MovieSlug = movieSlug;
                     like.UserId = userId;
@@ -38,7 +38,7 @@ namespace AmethystScreen.Services
                 if (movie != null)
                 {
                     var like = await _context.Likes.Where(like => like.MovieSlug == movieSlug && like.UserId == userId).FirstOrDefaultAsync();
-                    if(like != null)
+                    if (like != null)
                     {
                         _context.Likes.Remove(like);
                         movie.Likes--;

@@ -57,7 +57,7 @@ namespace AmethystScreen.Services
                     if (movie != null)
                     {
                         _logger.LogInformation($"{nameof(ImportMoviesFromDirectoryAsync)}: looking for video in directory for {movie.Title}");
-                        
+
                         string slug = GenerateSlug(movie.Title, movie.Year);
                         if (slug != null)
                             movie.Slug = slug;
@@ -65,9 +65,9 @@ namespace AmethystScreen.Services
                             movie.Slug = movie.Id.ToString();
 
                         string? url = FileVideoUrl(d);
-                        if (url == null) 
+                        if (url == null)
                             movie.VideoUrl = "<Not Found>";
-                        else 
+                        else
                             movie.VideoUrl = url;
 
                         movie.Likes = 0;

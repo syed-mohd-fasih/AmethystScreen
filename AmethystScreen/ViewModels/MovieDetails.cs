@@ -1,5 +1,4 @@
 ﻿using AmethystScreen.Models;
-using Microsoft.Identity.Client;
 
 namespace AmethystScreen.ViewModels
 {

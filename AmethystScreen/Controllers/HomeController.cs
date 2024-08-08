@@ -29,7 +29,7 @@ namespace AmethystScreen.Controllers
         public IActionResult SaveFeedback(string title, string description)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(userId != null)
+            if (userId != null)
             {
                 Feedback feedback = new Feedback
                 {

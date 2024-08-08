@@ -34,16 +34,16 @@
         </div>
     </div>
     <div class="comment-replies">
-    @if(Model.Replies != null && Model.Replies.Any())
-    {
-        <ul class="comments-list reply-list">
-        @foreach(var Reply in Model.Replies)
-        { 
-            <li>
-                <partial name="_CommentPartial" model="Reply" class="comment-list reply-list" />
-            </li>
+        @if (Model.Replies != null && Model.Replies.Any())
+        {
+            <ul class="comments-list reply-list">
+                @foreach (var Reply in Model.Replies)
+                {
+                    <li>
+                        <partial name="_CommentPartial" model="Reply" class="comment-list reply-list" />
+                    </li>
+                }
+            </ul>
         }
-        </ul>
-    }
     </div>
 </div>

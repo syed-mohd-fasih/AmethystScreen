@@ -31,12 +31,12 @@
                 justify-content: left;
             }
         }
-        
+
         .navbar-toggler {
             position: absolute;
             height: 40px;
             width: 40px;
-            align-items:center;
+            align-items: center;
             justify-content: center;
             top: 21px;
             right: 10px;
@@ -62,7 +62,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-md-inline-flex justify-content-end">
                     <ul class="navbar-nav flex-grow-1">
-                        @if(User.Identity != null)
+                        @if (User.Identity != null)
                         {
                             @if (User.Identity.IsAuthenticated)
                             {

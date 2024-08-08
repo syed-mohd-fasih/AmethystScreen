@@ -12,9 +12,9 @@
         public bool IsResolved { get; set; }
 
         // User Specific Reports
-        public bool IsUser {  get; set; }
+        public bool IsUser { get; set; }
         public string ReportedUserId { get; set; } = string.Empty;
-        public bool IsComments {  get; set; }
+        public bool IsComments { get; set; }
         public bool IsProfile { get; set; }
     }
 }

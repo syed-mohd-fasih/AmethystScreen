@@ -1,7 +1,6 @@
 ﻿using AmethystScreen.Data;
 using AmethystScreen.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
 
 namespace AmethystScreen.Services
 {

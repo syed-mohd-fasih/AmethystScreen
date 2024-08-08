@@ -69,7 +69,7 @@ namespace AmethystScreen.Controllers
                     _logger.LogInformation($"{nameof(Movie)}: {movie.Slug}: was accessed");
 
                     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    if(userId == null)
+                    if (userId == null)
                     {
                         _logger.LogWarning($"{nameof(Movie)}: User Id not found");
                         return Unauthorized();
@@ -211,7 +211,7 @@ namespace AmethystScreen.Controllers
 
         public async Task<IActionResult> LikeMovie(string movieSlug)
         {
-            if(movieSlug == null)
+            if (movieSlug == null)
             {
                 _logger.LogError($"{nameof(LikeMovie)}: Like request on a null movie");
                 return NotFound();
@@ -240,10 +240,10 @@ namespace AmethystScreen.Controllers
             return RedirectToAction(nameof(Movie), new { Slug = movieSlug });
         }
 
-        public async Task<IActionResult> DeleteComment(int CommentId)
-        {
-            return View();
-        }
+        //public async Task<IActionResult> DeleteComment(int CommentId)
+        //{
+        //    return View();
+        //}
 
         public async Task<IActionResult> SyncMovies()
         {
@@ -252,19 +252,19 @@ namespace AmethystScreen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> ReportFromMenu(string movieSlug)
-        {
-            // get form input
-            // get user id
-            return View();
-        }
+        //public async Task<IActionResult> ReportFromMenu(string movieSlug)
+        //{
+        //    // get form input
+        //    // get user id
+        //    return View();
+        //}
 
-        public async Task<IActionResult> ReportFromComments(string movieSlug)
-        {
-            // get form input
-            // get user id
-            return View();
-        }
+        //public async Task<IActionResult> ReportFromComments(string movieSlug)
+        //{
+        //    // get form input
+        //    // get user id
+        //    return View();
+        //}
 
         private bool MovieExists(string slug)
         {

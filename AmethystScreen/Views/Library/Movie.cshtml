@@ -98,14 +98,14 @@
             display: block;
         }
 
-        #custom-play-button img {
-            width: 100px;
-            height: 100px;
-        }
+            #custom-play-button img {
+                width: 100px;
+                height: 100px;
+            }
 
-        #custom-play-button:hover {
-            transform: translate(-50%, -50%) rotate(360deg);
-        }
+            #custom-play-button:hover {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
 
         .card-title {
             font-size: 1.5rem;
@@ -361,11 +361,11 @@
     <hr />
     <p class="fs-1 fc-bv mt-2">Comments</p>
     <hr />
-    
+
     <ul class="comments-list ps-4 mt-4">
-        @if(Model.Comments != null && Model.Comments.Any())
+        @if (Model.Comments != null && Model.Comments.Any())
         {
-            @foreach(var Comment in Model.Comments)
+            @foreach (var Comment in Model.Comments)
             {
                 <li>
                     <div class="comment-main-level">
