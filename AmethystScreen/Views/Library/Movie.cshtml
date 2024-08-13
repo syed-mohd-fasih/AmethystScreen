@@ -345,6 +345,32 @@
             </div>
         </button>
     </form>
+
+    <form class="m-1" method="post" asp-action="AddToWatchList" asp-controller="Library">
+        <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
+        <button class="btn bg-bv">
+            <div class="d-flex flex-row m-auto">
+                @if (Model.IsAddedToWatchListByUser)
+                {
+                    <img src="~/assets/check.png" class="icon" />
+                }
+                else
+                {
+                    <img src="~/assets/add.png" class="icon" />
+                }
+                <span class="m-auto ms-2">
+                    @if (Model.IsAddedToWatchListByUser)
+                    {
+                        <span>Added to Watch List</span>
+                    }
+                    else
+                    {
+                        <span>Add to Watch List</span>
+                    }
+                </span>
+            </div>
+        </button>
+    </form>
 </div>
 
 <div class="add-comment mt-2">

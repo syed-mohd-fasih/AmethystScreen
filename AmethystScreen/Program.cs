@@ -40,6 +40,7 @@ namespace AmethystScreen
             builder.Services.AddScoped<MoviesDirectoryService>();
             builder.Services.AddScoped<CommentsService>();
             builder.Services.AddScoped<LikesService>();
+            builder.Services.AddScoped<WatchListService>();
             builder.Services.AddScoped<RolesService>();
 
             builder.Logging.ClearProviders();

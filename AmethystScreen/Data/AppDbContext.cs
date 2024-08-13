@@ -12,6 +12,6 @@ namespace AmethystScreen.Data
         public DbSet<ContentActivity> ContentActivities { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<ReportedContent> ReportedContent { get; set; }
-
+        public DbSet<ToWatch> ToWatch { get; set; }
     }
 }

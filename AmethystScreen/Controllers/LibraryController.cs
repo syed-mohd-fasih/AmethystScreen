@@ -10,13 +10,14 @@ using AmethystScreen.Areas.Identity.Data;
 
 namespace AmethystScreen.Controllers
 {
-    public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService, CommentsService commentsService, LikesService likesService) : Controller
+    public class LibraryController(AppDbContext context, ILogger<LibraryController> logger, MoviesDirectoryService moviesDirectoryService, CommentsService commentsService, LikesService likesService, WatchListService watchListService) : Controller
     {
         private readonly AppDbContext _movieContext = context;
         private readonly ILogger<LibraryController> _logger = logger;
         private readonly MoviesDirectoryService _movieDirectoryService = moviesDirectoryService;
         private readonly CommentsService _commentsService = commentsService;
         private readonly LikesService _likesService = likesService;
+        private readonly WatchListService _watchListService = watchListService;
 
         // GET: Library
         public IActionResult Index(string searchTitle, int pageNumber = 1, int pageSize = 8)
@@ -81,12 +82,14 @@ namespace AmethystScreen.Controllers
                         {
                             Movie = movie,
                             IsLikedByUser = false,
+                            IsAddedToWatchListByUser = false,
                             Comments = comments,
                             CommentsModel = commentModelTemp
                         };
                         return View(viewModelTemp);
                     }
                     bool hasLiked = await _likesService.IsLiked(slug, userId);
+                    bool hasAddedToWatchList = await _watchListService.IsAddedToList(slug, userId);
 
                     var commentsModel = new CommentsModel
                     {
@@ -97,6 +100,7 @@ namespace AmethystScreen.Controllers
                     {
                         Movie = movie,
                         IsLikedByUser = hasLiked,
+                        IsAddedToWatchListByUser= hasAddedToWatchList,
                         Comments = comments,
                         CommentsModel = commentsModel
                     };
@@ -164,6 +168,7 @@ namespace AmethystScreen.Controllers
             return RedirectToAction("Movie", new { slug = movieSlug });
         }
 
+        [HttpPost]
         [Authorize(Policy = "user")]
         public async Task<IActionResult> LikeMovie(string movieSlug)
         {
@@ -194,6 +199,93 @@ namespace AmethystScreen.Controllers
                 await _likesService.RemoveLike(movieSlug, userId);
             }
             return RedirectToAction(nameof(Movie), new { slug = movieSlug });
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "user")]
+        public async Task<IActionResult> AddToWatchList(string movieSlug)
+        {
+            if (movieSlug == null)
+            {
+                _logger.LogError($"{nameof(AddToWatchList)}: Add to watch list request on a null movie");
+                return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                _logger.LogError($"{nameof(AddToWatchList)}: userId not found");
+                return Unauthorized();
+            }
+
+            // Get and Toggle the like status
+            var isAdded = !(await _watchListService.IsAddedToList(movieSlug, userId));
+
+            if (isAdded)
+            {
+                _logger.LogInformation($"{nameof(AddToWatchList)}: Like added to {movieSlug}");
+                await _watchListService.AddToList(movieSlug, userId);
+            }
+            else
+            {
+                _logger.LogInformation($"{nameof(AddToWatchList)}: Like removed from {movieSlug}");
+                await _watchListService.RemoveFromList(movieSlug, userId);
+            }
+            return RedirectToAction(nameof(Movie), new { slug = movieSlug });
+        }
+
+        [Authorize(Policy = "user")]
+        public async Task<IActionResult> LikedMovies()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                _logger.LogError($"{nameof(LikeMovie)}: userId not found");
+                return Unauthorized();
+            }
+
+            List<Like> Likes = await _movieContext.Likes.Where(l => l.UserId == userId).ToListAsync();
+            List<Movie> LikedMoviesList = new();
+            foreach(var like in Likes)
+            {
+                var movie = await _movieContext.Movies.FirstOrDefaultAsync(m => m.Slug == like.MovieSlug);
+
+                if (movie == null)
+                {
+                    _logger.LogError($"{nameof(LikedMovies)}: Movie {like.MovieSlug} not found in context");
+                    continue;
+                }
+
+                LikedMoviesList.Add(movie);
+            }
+            return View(LikedMoviesList);
+        }
+
+        [Authorize(Policy = "user")]
+        public async Task<IActionResult> ToWatchList()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                _logger.LogError($"{nameof(ToWatchList)}: userId not found");
+                return Unauthorized();
+            }
+
+            List<ToWatch> toWatch = await _movieContext.ToWatch.Where(l => l.UserId == userId).ToListAsync();
+            List<Movie> WatchList = new();
+            foreach(var watch in toWatch)
+            {
+                var movie = await _movieContext.Movies.FirstOrDefaultAsync(m => m.Slug == watch.MovieSlug);
+
+                if (movie == null)
+                {
+                    _logger.LogError($"{nameof(ToWatchList)}: Movie {watch.MovieSlug} not found in context");
+                    continue;
+                }
+
+                WatchList.Add(movie);
+            }
+            return View(WatchList);
         }
 
         [Authorize(Policy = "user")]

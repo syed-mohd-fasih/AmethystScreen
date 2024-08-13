@@ -1,0 +1,17 @@
+﻿@model IEnumerable<Movie>
+
+@{
+    ViewData["Title"] = "Watch List";
+}
+
+@if (Model.Any())
+{
+    foreach (var movie in Model)
+    {
+        <p><a asp-controller="Library" asp-action="Movie" asp-route-slug="@movie.Slug">@movie.Title</a></p>
+    }
+}
+else
+{
+    <p>You have no movies in your watch list...</p>
+}

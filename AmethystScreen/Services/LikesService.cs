@@ -48,7 +48,7 @@ namespace AmethystScreen.Services
                     _logger.LogWarning($"{nameof(RemoveLike)}: Like not found" +
                         $"? Remove Like request cancelled");
                 }
-                _logger.LogWarning($"{nameof(AddLike)}: {movieSlug} not found? Remove Like request cancelled");
+                _logger.LogWarning($"{nameof(RemoveLike)}: {movieSlug} not found? Remove Like request cancelled");
                 return;
             }
             _logger.LogWarning($"{nameof(RemoveLike)}: Like doesnt exist? Remove Like request cancelled");

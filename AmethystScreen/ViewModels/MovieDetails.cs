@@ -6,6 +6,7 @@ namespace AmethystScreen.ViewModels
     {
         public required Movie Movie { get; set; }
         public required bool IsLikedByUser { get; set; }
+        public required bool IsAddedToWatchListByUser { get; set; }
         public required List<Comment> Comments { get; set; }
         public CommentsModel CommentsModel { get; set; }
     }
