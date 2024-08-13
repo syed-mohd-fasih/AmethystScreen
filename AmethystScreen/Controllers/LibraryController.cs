@@ -68,25 +68,37 @@ namespace AmethystScreen.Controllers
                     _logger.LogInformation($"{nameof(Movie)}: {movie.Slug}: was accessed");
 
                     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var comments = await _commentsService.GetCommentsAsync(slug);
                     if (userId == null)
                     {
                         _logger.LogWarning($"{nameof(Movie)}: User Id not found, visiting user pass");
+                        var commentModelTemp = new CommentsModel
+                        {
+                            currComment = null,
+                            AuthenticatedUserId = null
+                        };
                         var viewModelTemp = new MovieDetails
                         {
                             Movie = movie,
-                            Comments = new List<Comment>(),
-                            IsLikedByUser = true
+                            IsLikedByUser = false,
+                            Comments = comments,
+                            CommentsModel = commentModelTemp
                         };
                         return View(viewModelTemp);
                     }
                     bool hasLiked = await _likesService.IsLiked(slug, userId);
 
-                    var comments = await _commentsService.GetCommentsAsync(slug);
+                    var commentsModel = new CommentsModel
+                    {
+                        currComment = null,
+                        AuthenticatedUserId = userId
+                    };
                     var viewModel = new MovieDetails
                     {
                         Movie = movie,
+                        IsLikedByUser = hasLiked,
                         Comments = comments,
-                        IsLikedByUser = hasLiked
+                        CommentsModel = commentsModel
                     };
                     return View(viewModel);
                 }
@@ -153,47 +165,6 @@ namespace AmethystScreen.Controllers
         }
 
         [Authorize(Policy = "user")]
-        [HttpPost]
-        public async Task<IActionResult> ReplyTo(string movieSlug, string content, int parentCommentId)
-        {
-            if (string.IsNullOrWhiteSpace(content))
-            {
-                _logger.LogWarning($"{nameof(ReplyTo)}: Reply cannot be empty");
-                TempData["Error"] = "Reply cannot be empty.";
-                return RedirectToAction("Movie", new { slug = movieSlug });
-            }
-
-            var movie = await _movieContext.Movies.FirstOrDefaultAsync(m => m.Slug == movieSlug);
-            if (movie == null)
-            {
-                _logger.LogError($"{nameof(ReplyTo)}: Movie: {movieSlug} not found in context");
-                return NotFound();
-            }
-
-            var parentComment = await _movieContext.Comments.FirstOrDefaultAsync(pc => pc.Id == parentCommentId);
-
-            if (parentComment == null)
-            {
-                _logger.LogError($"{nameof(ReplyTo)}: Parent comment id:{parentCommentId} not found in context");
-                return RedirectToAction("Movie", new { slug = movieSlug });
-            }
-
-            string? name = null;
-            string? id = null;
-            if (User.Identity != null)
-            {
-                name = User.Identity.Name;
-                id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
-            name ??= "Anonymous";
-            id ??= "Anonymous";
-
-            await _commentsService.AddReplyAsync(name, id, movieSlug, content, parentCommentId, parentComment);
-
-            return RedirectToAction("Movie", new { slug = movieSlug });
-        }
-
-        [Authorize(Policy = "user")]
         public async Task<IActionResult> LikeMovie(string movieSlug)
         {
             if (movieSlug == null)
@@ -222,13 +193,31 @@ namespace AmethystScreen.Controllers
                 _logger.LogInformation($"{nameof(LikeMovie)}: Like removed from {movieSlug}");
                 await _likesService.RemoveLike(movieSlug, userId);
             }
-            return RedirectToAction(nameof(Movie), new { Slug = movieSlug });
+            return RedirectToAction(nameof(Movie), new { slug = movieSlug });
         }
 
-        //public async Task<IActionResult> DeleteComment(int CommentId)
-        //{
-        //    return View();
-        //}
+        [Authorize(Policy = "user")]
+        public async Task<IActionResult> DeleteComment(int commentId, string movieSlug)
+        {
+            var comment = await _movieContext.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
+
+            if (comment == null)
+            {
+                _logger.LogError($"{nameof(DeleteComment)}: comment: {commentId} not found in db");
+                return NotFound();
+            }
+
+            if (comment.CommentByUserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+            {
+                _logger.LogInformation($"{nameof(DeleteComment)}: removing comment {commentId} from db...");
+                await _commentsService.RemoveCommentAsync(commentId);
+            }
+            else
+            {
+                _logger.LogWarning($"{nameof(DeleteComment)}: User not author of comment to remove");
+            }
+            return RedirectToAction(nameof(Movie), new { slug = movieSlug });
+        }
 
         public async Task<IActionResult> SyncMovies()
         {
@@ -237,21 +226,13 @@ namespace AmethystScreen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //[Authorize(Policy = "user")]
-        //public async Task<IActionResult> ReportFromMenu(string movieSlug)
-        //{
-        //    // get form input
-        //    // get user id
-        //    return View();
-        //}
-
-        //[Authorize(Policy = "user")]
-        //public async Task<IActionResult> ReportFromComments(string movieSlug)
-        //{
-        //    // get form input
-        //    // get user id
-        //    return View();
-        //}
+        [Authorize(Policy = "user")]
+        public async Task<IActionResult> Report(string movieSlug)
+        {
+            // get form input
+            // get user id
+            return View();
+        }
 
         private bool MovieExists(string slug)
         {

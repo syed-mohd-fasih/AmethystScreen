@@ -336,7 +336,7 @@
         </button>
     </form>
 
-    <form class="m-1" method="post" asp-action="Report" asp-controller="Library">
+    <form class="m-1" asp-action="Report" asp-controller="Library">
         <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
         <button class="btn bg-bv">
             <div class="d-flex flex-row m-auto">
@@ -368,9 +368,10 @@
         {
             @foreach (var Comment in Model.Comments)
             {
+                Model.CommentsModel.currComment = Comment;
                 <li>
                     <div class="comment-main-level">
-                        <partial name="_CommentPartial" model="Comment" class="author" />
+                        <partial name="_CommentPartial" model="Model.CommentsModel" class="author" />
                     </div>
                 </li>
             }
@@ -407,7 +408,7 @@
                             videoEl.style.display = 'flex';
                         }
                     } else {
-                        window.location.href = '/Identity/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname);
+                        window.location.href = '/Identity/Account/Login?returnUrl=' + encodeURIComponent(window.location.pathname + window.location.search);
                     }
                 })
                 .catch(error => console.error('Error checking authorization:', error));

@@ -1,4 +1,4 @@
-﻿@model AmethystScreen.Models.Comment
+﻿@model AmethystScreen.ViewModels.CommentsModel
 
 <div class="comment">
     <div class="row justify-content-evenly comment-body">
@@ -7,43 +7,42 @@
         </div>
         <div class="comment-box col ms-2">
             <div class="comment-head">
-                <h6 class="comment-name">@Model.CommentByUsername</h6>
-                <span>@Model.CreatedAt</span>
-                <div class="float-end">
-                    <button class="bg-bv delete-btn" asp-action="DeleteComment" asp-controller="Library">
-                        <img class="icon-sm" src="~/assets/bin.png" alt="Delete" />
-                    </button>
-                    <button class="bg-bv reply-btn">
-                        <img class="icon-sm" src="~/assets/reply.png" alt="Reply" />
-                    </button>
+                <h6 class="comment-name">@Model.currComment.CommentByUsername</h6>
+                <span>@Model.currComment.CreatedAt</span>
+                <div class="d-flex float-end">
+                @if (Model.AuthenticatedUserId == Model.currComment.CommentByUserId)
+                {
+                    <form asp-action="DeleteComment" asp-controller="Library">
+                        <input type="hidden" name="commentId" value="@Model.currComment.Id" />
+                        <input type="hidden" name="movieSlug" value="@Model.currComment.MovieSlug" />
+                        <button type="submit" class="bg-bv delete-btn">
+                            <img class="icon-sm" src="~/assets/bin.png" alt="Delete" />
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Report" asp-controller="Library">
+                        <button type="submit" class="bg-bv delete-btn">
+                            <img class="icon-sm" src="~/assets/flag.png" alt="Delete" />
+                        </button>
+                    </form>
+                }
                 </div>
             </div>
             <div class="comment-content">
-                @Model.Content
+                @Model.currComment.Content
             </div>
         </div>
         <div class="reply-field-container mt-2">
             <form method="post" asp-action="ReplyTo" asp-controller="Library" class="mb-3">
                 <div class="input-group comments-input-group">
-                    <input type="hidden" name="movieSlug" value="@Model.MovieSlug" />
-                    <input type="hidden" name="parentCommentId" value="@Model.Id" />
+                    <input type="hidden" name="movieSlug" value="@Model.currComment.MovieSlug" />
+                    <input type="hidden" name="parentCommentId" value="@Model.currComment.Id" />
                     <input type="text" class="form-control bg-black text-light rounded-start" name="content" placeholder="Drop your comment here..." />
                     <input type="submit" value="Reply" class="btn text-dark bg-bv" />
                 </div>
             </form>
         </div>
-    </div>
-    <div class="comment-replies">
-        @if (Model.Replies != null && Model.Replies.Any())
-        {
-            <ul class="comments-list reply-list">
-                @foreach (var Reply in Model.Replies)
-                {
-                    <li>
-                        <partial name="_CommentPartial" model="Reply" class="comment-list reply-list" />
-                    </li>
-                }
-            </ul>
-        }
     </div>
 </div>
