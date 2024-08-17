@@ -111,24 +111,6 @@ namespace AmethystScreen.Controllers
             return View(user);
         }
 
-        // GET: Mod/ReviewActivity/xxxx-xxxx-xxxx
-        public async Task<IActionResult> ReviewActivity(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var activity = await _appContext.ContentActivities
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (activity == null)
-            {
-                return NotFound();
-            }
-
-            return View(activity);
-        }
-
         // GET: Mod/ReviewFeedback/xxxx-xxxx-xxxx
         public async Task<IActionResult> ReviewFeedback(int? id)
         {

@@ -123,11 +123,6 @@ namespace AmethystScreen.Services
         {
             return await _appContext.Feedbacks.ToListAsync();
         }
-
-        public async Task<List<ContentActivity>> GetRecentActivityAsync()
-        {
-            return await _appContext.ContentActivities.ToListAsync();
-        }
     }
 
 }

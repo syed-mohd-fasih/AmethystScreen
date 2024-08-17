@@ -67,24 +67,6 @@ else
     <p>There is no reported content today :D</p>
 }
 
-<h3>Recent Activity</h3>
-@if (Model.RecentActivity.Any())
-{
-    <ul>
-        @foreach (var activity in Model.RecentActivity)
-        {
-            <li>@activity.Content</li>
-            <li>
-                <a asp-action="ReviewActivity" asp-route-id="@activity.Id">Review</a>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>There is no logged activity :\</p>
-}
-
 <h3>Feedbacks</h3>
 @if (Model.Feedbacks.Any())
 {
