@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using AmethystScreen.ViewModels;
 using System.Security.Claims;
 using AmethystScreen.Areas.Identity.Data;
+using System.Drawing;
 
 namespace AmethystScreen.Controllers
 {
@@ -319,11 +320,196 @@ namespace AmethystScreen.Controllers
         }
 
         [Authorize(Policy = "user")]
-        public async Task<IActionResult> Report(string movieSlug)
+        public IActionResult ReportUser(string reportedUserId)
         {
-            // get form input
-            // get user id
-            return View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                _logger.LogError($"{nameof(ReportMovie)}: User not found");
+                return NotFound();
+            }
+
+            var date = DateTime.UtcNow;
+
+            ReportedContent report = new ReportedContent
+            {
+                ReportedByUserId = userId,
+
+                // Title and Description yet to get; will get on review page:
+                Title = string.Empty,
+                Description = string.Empty,
+
+                ReportDate = date,
+                IsResolved = false,
+
+                IsUser = true,
+                ReportedUserId = reportedUserId,
+
+                IsMovie = false,
+                ReportedMovieSlug = string.Empty,
+
+                IsComments = false,
+                ReportedCommentId = -1,
+
+                ReportStatus = ReportedContent.Status.Pending
+            };
+
+            return RedirectToAction(nameof(Report), report);
+        }
+
+        [Authorize(Policy = "user")]
+        public IActionResult ReportMovie(string reportedMovieSlug)
+        {
+            if(string.IsNullOrEmpty(reportedMovieSlug))
+            {
+                _logger.LogWarning($"{nameof(ReportMovie)}: Null movie slug.");
+                return BadRequest();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId == null)
+            {
+                _logger.LogError($"{nameof(ReportMovie)}: User not found");
+                return NotFound();
+            }
+
+            var date = DateTime.UtcNow;
+            
+            ReportedContent report = new ReportedContent
+            {
+                ReportedByUserId = userId,
+
+                // Title and Description yet to get; will get on review page:
+                Title = string.Empty,
+                Description = string.Empty,
+
+                ReportDate = date,
+                IsResolved = false,
+                
+                IsUser = false,
+                ReportedUserId = string.Empty,
+
+                IsMovie = true,
+                ReportedMovieSlug = reportedMovieSlug,
+
+                IsComments = false,
+                ReportedCommentId = -1,
+
+                ReportStatus = ReportedContent.Status.Pending
+            };
+
+            return RedirectToAction(nameof(Report), report);
+        }
+
+        [Authorize(Policy = "user")]
+        public IActionResult ReportComment(int reportedCommentId, string reportedMovieSlug)
+        {
+            if (string.IsNullOrEmpty(reportedMovieSlug) || reportedCommentId <= 0 )
+            {
+                _logger.LogWarning($"{nameof(ReportMovie)}: Null movie slug {reportedMovieSlug} or invalid commentId {reportedCommentId}");
+                return BadRequest();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                _logger.LogError($"{nameof(ReportMovie)}: User not found");
+                return NotFound();
+            }
+
+            var date = DateTime.UtcNow;
+
+            ReportedContent report = new ReportedContent
+            {
+                ReportedByUserId = userId,
+
+                // Title and Description yet to get; will get on review page:
+                Title = string.Empty,
+                Description = string.Empty,
+
+                ReportDate = date,
+                IsResolved = false,
+
+                IsUser = false,
+                ReportedUserId = string.Empty,
+
+                IsMovie = false,
+                ReportedMovieSlug = reportedMovieSlug,
+
+                IsComments = true,
+                ReportedCommentId = reportedCommentId,
+
+                ReportStatus = ReportedContent.Status.Pending
+            };
+
+            return RedirectToAction(nameof(Report), report);
+        }
+
+        [Authorize(Policy = "user")]
+        public IActionResult Report(ReportedContent reportedContent)
+        {
+            // Action used to funnel the above 3 methods to display single form with different data
+            return View(reportedContent);
+        }
+
+        [Authorize(Policy = "user")]
+        public async Task<IActionResult> CreateReport(string title, string description, bool isUser = false, string reportedUserId = "", bool isMovie = false, string reportedMovieSlug = "", bool isComments = false, int reportedCommentId = -1)
+        {
+            if (string.IsNullOrEmpty(title) || string.IsNullOrEmpty(description))
+            {
+                _logger.LogError($"{nameof(CreateReport)}: empty title or description...");
+                return BadRequest();
+            }
+            if (!isUser && !isMovie && !isComments)
+            {
+                _logger.LogError($"{nameof(CreateReport)}: invalid report creating request\n {isUser}, {isMovie}, {isComments}");
+                return BadRequest();
+            }
+            if (isUser && string.IsNullOrEmpty(reportedUserId))
+            {
+                _logger.LogError($"{nameof(CreateReport)}: invalid user report.. {reportedUserId}");
+                return BadRequest();
+            }
+            if (isMovie && string.IsNullOrEmpty(reportedMovieSlug))
+            {
+                _logger.LogError($"{nameof(CreateReport)}: invalid movie report.. {reportedMovieSlug}");
+                return BadRequest();
+            }
+            if (isComments && string.IsNullOrEmpty(reportedMovieSlug) && reportedCommentId <= 0)
+            {
+                _logger.LogError($"{nameof(CreateReport)}: invalid comment report.. {reportedMovieSlug}, {reportedCommentId}");
+                return BadRequest();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId == null)
+            {
+                _logger.LogError($"{nameof(CreateReport)}: User not found");
+                return NotFound();
+            }
+            var reportDate = DateTime.UtcNow;
+
+            ReportedContent report = new ReportedContent
+            {
+                ReportedByUserId = userId,
+                Title = title,
+                Description = description,
+                ReportDate = reportDate,
+                IsResolved = false,
+                IsUser = isUser,
+                ReportedUserId = reportedUserId,
+                IsMovie = isMovie,
+                ReportedMovieSlug = reportedMovieSlug,
+                IsComments = isComments,
+                ReportedCommentId = reportedCommentId,
+                ReportStatus = ReportedContent.Status.Pending
+            };
+            
+            _movieContext.ReportedContent.Add(report);
+            await _movieContext.SaveChangesAsync();
+            _logger.LogInformation($"{nameof(CreateReport)}: Report saved to db");
+
+            return RedirectToAction(nameof(Movie), new { slug = reportedMovieSlug });
         }
 
         private bool MovieExists(string slug)

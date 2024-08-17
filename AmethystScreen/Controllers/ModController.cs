@@ -32,8 +32,9 @@ namespace AmethystScreen.Controllers
         // GET: Mod
         public async Task<IActionResult> Index()
         {
-            var users = await _rolesService.GetAllUsersAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var reportedContent = await _rolesService.GetReportedContentAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var users = await _rolesService.GetAllUsersAsync(userId);
+            var reportedContent = await _rolesService.GetReportedContentAsync(userId);
             var recentActivity = await _rolesService.GetRecentActivityAsync();
             var feedbacks = await _rolesService.GetFeedbackAsync();
 
@@ -48,10 +49,10 @@ namespace AmethystScreen.Controllers
             return View(modDash);
         }
 
-        // GET: Mod/Details/xxxx-xxxx-xxxx // probably change to reports
+        // GET: Mod/ReviewReport/xxxx-xxxx-xxxx // probably change to reports
         public async Task<IActionResult> ReviewReport(int? id)
         {
-            if (id == null)
+            if (id == null || id <= 0)
             {
                 return NotFound();
             }
@@ -64,6 +65,34 @@ namespace AmethystScreen.Controllers
             }
 
             return View(report);
+        }
+
+        public async Task<IActionResult> ReportAction(int? id, bool action)
+        {
+            if (id == null || id <= 0)
+            {
+                return NotFound();
+            }
+
+            var report = await _appContext.ReportedContent.FirstOrDefaultAsync(r => r.Id == id);
+
+            if (report == null)
+            {
+                //log for error: report not found
+                return NotFound();
+            }
+
+            if (action)
+            {
+                report.ReportStatus = ReportedContent.Status.UnderReview;
+            }
+            else
+            {
+                report.ReportStatus = ReportedContent.Status.Rejected;
+            }
+
+            await _appContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Mod/ManageUser/xxxx-xxxx-xxxx
@@ -82,6 +111,7 @@ namespace AmethystScreen.Controllers
             return View(user);
         }
 
+        // GET: Mod/ReviewActivity/xxxx-xxxx-xxxx
         public async Task<IActionResult> ReviewActivity(int? id)
         {
             if (id == null)
@@ -99,6 +129,7 @@ namespace AmethystScreen.Controllers
             return View(activity);
         }
 
+        // GET: Mod/ReviewFeedback/xxxx-xxxx-xxxx
         public async Task<IActionResult> ReviewFeedback(int? id)
         {
             if (id == null)

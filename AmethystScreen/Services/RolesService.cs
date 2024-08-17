@@ -1,6 +1,7 @@
 ﻿using AmethystScreen.Areas.Identity.Data;
 using AmethystScreen.Data;
 using AmethystScreen.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 
 namespace AmethystScreen.Services
@@ -58,11 +59,9 @@ namespace AmethystScreen.Services
             var authUserRoleId = _userContext.UserRoles.FirstOrDefault(u => u.UserId == accessorUserId)?.RoleId;
             var accessorRole = _roles.FirstOrDefault(r => r.Id == authUserRoleId);
             if (accessorRole == null) return new List<User>();
-
             int accessLevel = accessorRole.Level;
 
             List<User> users = new List<User>();
-
             var userList = await _userContext.Users.ToListAsync();
             foreach (var user in userList)
             {
@@ -83,9 +82,41 @@ namespace AmethystScreen.Services
             return users;
         }
 
-        public async Task<List<ReportedContent>> GetReportedContentAsync()
+        public async Task<List<ReportedContent>> GetReportedContentAsync(string? accessorUserId)
         {
-            return await _appContext.ReportedContent.ToListAsync();
+            var authUserRoleId = _userContext.UserRoles.FirstOrDefault(u => u.UserId == accessorUserId)?.RoleId;
+            var accessorRole = _roles.FirstOrDefault(r => r.Id == authUserRoleId);
+            if (accessorRole == null) return new List<ReportedContent>();
+            int accessLevel = accessorRole.Level;
+
+            List<ReportedContent> reports = new List<ReportedContent>();
+            var reportListPending = await _appContext.ReportedContent.Where(r => r.ReportStatus == ReportedContent.Status.Pending).ToListAsync();
+            var reportListUnderReview = await _appContext.ReportedContent.Where(r => r.ReportStatus == ReportedContent.Status.UnderReview).ToListAsync();
+            var reportListApproved = await _appContext.ReportedContent.Where(r => r.ReportStatus == ReportedContent.Status.Approved).ToListAsync();
+            var reportListRejected = await _appContext.ReportedContent.Where(r => r.ReportStatus == ReportedContent.Status.Rejected).ToListAsync();
+
+            switch(accessLevel)
+            {
+                case 0:
+                    // user role, reject access
+                    break;
+                case 1:
+                    reports.AddRange(reportListPending);
+                    break;
+                case 2:
+                    reports.AddRange(reportListUnderReview);
+                    break;
+                case 3:
+                    reports.AddRange(reportListPending);
+                    reports.AddRange(reportListUnderReview);
+                    reports.AddRange(reportListApproved);
+                    reports.AddRange(reportListRejected);
+                    break;
+                default:
+                    break;
+            }
+
+            return reports;
         }
 
         public async Task<List<Feedback>> GetFeedbackAsync()

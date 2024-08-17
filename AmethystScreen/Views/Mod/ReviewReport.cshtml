@@ -8,4 +8,17 @@
     <p>@Model.ReportDate</p>
     <p>@Model.Title</p>
     <p>@Model.Description</p>
+
+    <form asp-controller="Mod" asp-action="ReportAction">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <input type="hidden" name="action" value="true" />
+        <button class="btn bg-bv">Approve</button>
+    </form>
+
+    <form asp-controller="Mod" asp-action="ReportAction">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <input type="hidden" name="action" value="false" />
+        <button class="btn bg-bv">Reject</button>
+    </form>
+
 </div>

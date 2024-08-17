@@ -22,9 +22,11 @@
                 }
                 else
                 {
-                    <form asp-action="Report" asp-controller="Library">
+                    <form asp-action="ReportComment" asp-controller="Library">
+                        <input type="hidden" name="reportedCommentId" value="@Model.currComment.Id" />
+                        <input type="hidden" name="reportedMovieSlug" value="@Model.currComment.MovieSlug" />
                         <button type="submit" class="bg-bv delete-btn">
-                            <img class="icon-sm" src="~/assets/flag.png" alt="Delete" />
+                            <img class="icon-sm" src="~/assets/flag.png" alt="Report" />
                         </button>
                     </form>
                 }

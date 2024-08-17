@@ -336,8 +336,8 @@
         </button>
     </form>
 
-    <form class="m-1" asp-action="Report" asp-controller="Library">
-        <input type="hidden" name="movieSlug" value="@Model.Movie.Slug" />
+    <form class="m-1" asp-action="ReportMovie" asp-controller="Library">
+        <input type="hidden" name="reportedMovieSlug" value="@Model.Movie.Slug" />
         <button class="btn bg-bv">
             <div class="d-flex flex-row m-auto">
                 <img src="~/assets/flag.png" class="icon" />
