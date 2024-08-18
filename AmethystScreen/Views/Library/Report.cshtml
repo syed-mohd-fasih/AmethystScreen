@@ -4,64 +4,68 @@
     ViewData["Title"] = "Report Form";
 }
 
-<h1>Report Form</h1>
+<div class="container mt-5">
+    <div class="shadow-sm bg-dark text-light">
+        <div class="text-light">
+            <h1 class="m-0">@ViewData["Title"]</h1>
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateReport" method="post">
+                @if (Model.IsUser)
+                {
+                    <h4 class="text-warning">Report a User</h4>
+                    <input type="hidden" name="isUser" value="@Model.IsUser" />
+                    <input type="hidden" name="reportedUserId" value="true" />
 
-@* <input type="type" name="name" value="" /> *@
-<form asp-action="CreateReport" method="post">
+                    <input type="hidden" name="isComments" value="false" />
+                    <input type="hidden" name="reportedCommentId" value="-1" />
 
-    @if (Model.IsUser)
-    {
-        <h2>Report a User</h2>
-        <input type="hidden" name="isUser" value="@Model.IsUser" />
-        <input type="hidden" name="reportedUserId" value="true" />
+                    <input type="hidden" name="isMovie" value="false" />
+                    <input type="hidden" name="reportedMovieSlug" value="@null" />
+                }
+                else if (Model.IsComments)
+                {
+                    <h4 class="text-warning">Report a Comment</h4>
+                    <p><strong>Comment ID:</strong> @Model.ReportedCommentId</p>
 
-        <input type="hidden" name="isComments" value="false" />
-        <input type="hidden" name="reportedCommentId" value="-1" />
+                    <input type="hidden" name="isUser" value="false" />
+                    <input type="hidden" name="reportedUserId" value="@null" />
 
-        <input type="hidden" name="isMovie" value="false" />
-        <input type="hidden" name="reportedMovieSlug" value="@null" />
-    }
-    else if (Model.IsComments)
-    {
-        <h2>Report a Comment</h2>
+                    <input type="hidden" name="isComments" value="true" />
+                    <input type="hidden" name="reportedCommentId" value="@Model.ReportedCommentId" />
 
-        <p>Comment id: @Model.ReportedCommentId</p>
+                    <input type="hidden" name="isMovie" value="false" />
+                    <input type="hidden" name="reportedMovieSlug" value="@null" />
+                }
+                else if (Model.IsMovie)
+                {
+                    <h4 class="text-warning">Report a Movie/Video</h4>
+                    <p><strong>Movie Slug:</strong> @Model.ReportedMovieSlug</p>
 
-        <input type="hidden" name="isUser" value="false" />
-        <input type="hidden" name="reportedUserId" value="@null" />
+                    <input type="hidden" name="isUser" value="false" />
+                    <input type="hidden" name="reportedUserId" value="@null" />
 
-        <input type="hidden" name="isComments" value="true" />
-        <input type="hidden" name="reportedCommentId" value="@Model.ReportedCommentId" />
+                    <input type="hidden" name="isComments" value="false" />
+                    <input type="hidden" name="reportedCommentId" value="@null" />
 
-        <input type="hidden" name="isMovie" value="false" />
-        <input type="hidden" name="reportedMovieSlug" value="@null" />
-    }
-    else if (Model.IsMovie)
-    {
-        <h2>Report a Movie/Video</h2>
+                    <input type="hidden" name="isMovie" value="true" />
+                    <input type="hidden" name="reportedMovieSlug" value="@Model.ReportedMovieSlug" />
+                }
 
-        <p>Movie Slug: @Model.ReportedMovieSlug</p>
+                <div class="form-group mb-3">
+                    <label asp-for="Title" class="form-label">Title</label>
+                    <input asp-for="Title" class="form-control bg-dark text-light" placeholder="Enter report title" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
 
-        <input type="hidden" name="isUser" value="false" />
-        <input type="hidden" name="reportedUserId" value="@null" />
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-light" rows="5" placeholder="Provide details"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
 
-        <input type="hidden" name="isComments" value="false" />
-        <input type="hidden" name="reportedCommentId" value="@null" />
-
-        <input type="hidden" name="isMovie" value="true" />
-        <input type="hidden" name="reportedMovieSlug" value="@Model.ReportedMovieSlug" />
-    }
-
-
-    <div class="form-group">
-        <label asp-for="Title">Title</label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+                <button type="submit" class="btn btn-danger">Submit Report</button>
+            </form>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Description">Description</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn bg-bv">Submit Report</button>
-</form>
+</div>

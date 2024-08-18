@@ -9,7 +9,6 @@ namespace AmethystScreen.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
-        public DbSet<ContentActivity> ContentActivities { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<ReportedContent> ReportedContent { get; set; }
         public DbSet<ToWatch> ToWatch { get; set; }

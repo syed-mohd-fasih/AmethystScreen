@@ -1,24 +1,36 @@
 ﻿@model AmethystScreen.Models.ReportedContent
+
 @{
-    ViewData["Title"] = "Feedback";
+    ViewData["Title"] = "Review Report";
 }
 
-<div>
-    <p>@Model.Id</p>
-    <p>@Model.ReportDate</p>
-    <p>@Model.Title</p>
-    <p>@Model.Description</p>
+<div class="container mt-5">
+    <div class="shadow-sm bg-dark text-light">
+        <div class="text-light">
+            <h1 class="m-0">@ViewData["Title"]</h1>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <p><strong>Feedback ID:</strong> @Model.Id</p>
+                <p><strong>Report Date:</strong> @Model.ReportDate</p>
+                <p><strong>Title:</strong> @Model.Title</p>
+                <p><strong>Description:</strong></p>
+                <p>@Model.Description</p>
+            </div>
 
-    <form asp-controller="Mod" asp-action="ReportAction">
-        <input type="hidden" name="id" value="@Model.Id" />
-        <input type="hidden" name="action" value="true" />
-        <button class="btn bg-bv">Approve</button>
-    </form>
+            <div class="d-flex justify-content-between">
+                <form asp-controller="Mod" asp-action="ReportAction" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="action" value="true" />
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </form>
 
-    <form asp-controller="Mod" asp-action="ReportAction">
-        <input type="hidden" name="id" value="@Model.Id" />
-        <input type="hidden" name="action" value="false" />
-        <button class="btn bg-bv">Reject</button>
-    </form>
-
+                <form asp-controller="Mod" asp-action="ReportAction" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <input type="hidden" name="action" value="false" />
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>

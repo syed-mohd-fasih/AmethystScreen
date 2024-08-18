@@ -1,12 +1,38 @@
 ﻿@model AmethystScreen.Models.Feedback
+
 @{
-    ViewData["Title"] = "Feedback";
+    ViewData["Title"] = "Feedback Details";
 }
 
-<div>
-    <p>@Model.Id</p>
-    <p>@Model.PostedByUserid</p>
-    <p>@Model.DatePosted</p>
-    <p>@Model.Title</p>
-    <p>@Model.Description</p>
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header text-light">
+            <h3 class="mb-0">Feedback Details</h3>
+        </div>
+        <div class="card-body bg-dark text-light">
+            <div class="mb-3">
+                <strong>ID:</strong> <span>@Model.Id</span>
+            </div>
+            <div class="mb-3">
+                <strong>Posted By:</strong> <span>@Model.PostedByUserid</span>
+            </div>
+            <div class="mb-3">
+                <strong>Date Posted:</strong> <span>@Model.DatePosted.ToString("MMM d, yyyy")</span>
+            </div>
+            <div class="mb-3">
+                <strong>Title:</strong> <h4>@Model.Title</h4>
+            </div>
+            <div class="mb-3">
+                <strong>Description:</strong>
+                <p>@Model.Description</p>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <form asp-action="ReviewFeedback" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" name="action" value="true" class="btn btn-success">Approve</button>
+                <button type="submit" name="action" value="false" class="btn btn-danger ms-2">Reject</button>
+            </form>
+        </div>
+    </div>
 </div>

@@ -69,6 +69,34 @@
                                 <li>
                                     <p>Welcome, @User.Identity.Name!</p>
                                 </li>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Admin Dashboard</a>
+                                    </li>
+                                }
+
+                                @if (User.IsInRole("Moderator"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Mod" asp-action="Index">Moderator Dashboard</a>
+                                    </li>
+                                }
+
+                                @if (User.IsInRole("SuperUser"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Super" asp-action="Index">SuperUser Dashboard</a>
+                                    </li>
+                                }
+
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Library" asp-action="LikedMovies">Liked Movies</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Library" asp-action="ToWatchList">Watch List</a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Logout">Logout</a>
                                 </li>

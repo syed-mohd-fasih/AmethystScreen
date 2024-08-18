@@ -1,48 +1,122 @@
-﻿@model IEnumerable<AmethystScreen.Areas.Identity.Data.User>
+﻿@model AmethystScreen.ViewModels.ModeratorDashboard
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+<head>
+    <style>
+        .card:hover {
+            transform: none;
+            box-shadow: none;
         }
-    </tbody>
-</table>
+    </style>
+</head>
+
+<div class="container-fluid mt-5">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    <div class="card mb-4 shadow-sm w-100">
+        <div class="card-header">
+            <h3 class="mb-0">User Management</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.Users.Any())
+            {
+                <table class="table table-hover w-100 text-light">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.Users)
+                        {
+                            <tr>
+                                <td>@user.UserName</td>
+                                <td>@user.Email</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" asp-action="ManageUser" asp-route-userId="@user.Id">Manage</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-warning text-center" role="alert">
+                    There are no active users here yet :(
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm w-100">
+        <div class="card-header">
+            <h3 class="mb-0">Reported Content</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.ReportedContent.Any())
+            {
+                <table class="table table-hover w-100 text-light">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Content ID</th>
+                            <th>Reported By</th>
+                            <th>Reason</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var report in Model.ReportedContent)
+                        {
+                            <tr>
+                                <td>@report.Id</td>
+                                <td>@report.ReportedByUserId</td>
+                                <td>@report.Description</td>
+                                <td>
+                                    <a class="btn btn-danger btn-sm" asp-action="ReviewReport" asp-route-id="@report.Id">Review</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-success text-center" role="alert">
+                    There is no reported content today :D
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm w-100">
+        <div class="card-header text-light">
+            <h3 class="mb-0">Feedbacks</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.Feedbacks.Any())
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var feedback in Model.Feedbacks)
+                    {
+                        <li class="list-group-item bg-dark text-light border-0 mb-2">
+                            <p class="mb-1">@feedback.Description</p>
+                            <a class="btn btn-info btn-sm" asp-action="ReviewFeedback" asp-route-id="@feedback.Id">Review</a>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="alert alert-warning text-center" role="alert">
+                    There are no feedbacks to review yet...
+                </div>
+            }
+        </div>
+    </div>
+</div>

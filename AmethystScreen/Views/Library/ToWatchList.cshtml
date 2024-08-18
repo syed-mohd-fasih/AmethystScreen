@@ -4,14 +4,28 @@
     ViewData["Title"] = "Watch List";
 }
 
-@if (Model.Any())
-{
-    foreach (var movie in Model)
+<div class="container">
+    <h1 class="mb-4">@ViewData["Title"]</h1>
+
+    @if (Model.Any())
     {
-        <p><a asp-controller="Library" asp-action="Movie" asp-route-slug="@movie.Slug">@movie.Title</a></p>
+        <ul class="list-group">
+            @foreach (var movie in Model)
+            {
+                <li class="list-group-item d-flex justify-content-start align-items-center bg-bv">
+                    <img src="@movie.Image" alt="@movie.Title" class="rounded me-3" style="width: 80px; height: 120px; object-fit: cover;">
+                    <div>
+                        <h5 class="mb-1"><a href="@Url.Action("Movie", "Library", new { slug = movie.Slug })" class="text-decoration-none bg-bv">@movie.Title</a></h5>
+                        <small>@movie.Year</small>
+                    </div>
+                </li>
+            }
+        </ul>
     }
-}
-else
-{
-    <p>You have no movies in your watch list...</p>
-}
+    else
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            You have no movies in your watch list...
+        </div>
+    }
+</div>

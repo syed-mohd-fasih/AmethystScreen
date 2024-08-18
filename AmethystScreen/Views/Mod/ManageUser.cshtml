@@ -4,18 +4,32 @@
     ViewData["Title"] = "Manage User";
 }
 
-<h1>Manage Profile (Mod)</h1>
+<head>
+    <style>
+        .card:hover {
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+</head>
 
-<h4>User</h4>
-<hr />
-<div>
-    <p>
-        @Model.UserName
-    </p>
+<div class="container-fluid mt-5">
+    <div class="card shadow-sm bg-dark text-light">
+        <div class="card-header text-light">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-3">User Information</h4>
+            <hr />
+            <div class="mb-3">
+                <p class="fs-5"><strong>Username: </strong> @Model.UserName</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to ModDash</a>
+<div class="d-flex justify-content-end">
+    <a class="btn bg-bv" asp-action="Index">Back to Dashboard</a>
 </div>
 
 @section Scripts {

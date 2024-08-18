@@ -35,14 +35,12 @@ namespace AmethystScreen.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var users = await _rolesService.GetAllUsersAsync(userId);
             var reportedContent = await _rolesService.GetReportedContentAsync(userId);
-            var recentActivity = await _rolesService.GetRecentActivityAsync();
             var feedbacks = await _rolesService.GetFeedbackAsync();
 
             ModeratorDashboard modDash = new ModeratorDashboard
             {
                 Users = users,
                 ReportedContent = reportedContent,
-                RecentActivity = recentActivity,
                 Feedbacks = feedbacks
             };
 

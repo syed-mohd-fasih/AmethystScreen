@@ -7,7 +7,6 @@ namespace AmethystScreen.ViewModels
     {
         public IEnumerable<User>? Users { get; set; }
         public IEnumerable<ReportedContent>? ReportedContent { get; set; }
-        public IEnumerable<ContentActivity>? RecentActivity { get; set; }
         public IEnumerable<Feedback>? Feedbacks { get; set; }
     }
 }
