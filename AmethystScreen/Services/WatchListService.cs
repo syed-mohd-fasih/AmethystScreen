@@ -11,7 +11,7 @@ namespace AmethystScreen.Services
         public async Task AddToList(string movieSlug, string userId)
         {
             ToWatch toWatch = new();
-            if (!_context.Likes.Any(watch => watch.UserId == userId && watch.MovieSlug == movieSlug))
+            if (!_context.ToWatch.Any(watch => watch.UserId == userId && watch.MovieSlug == movieSlug))
             {
                 var movie = _context.Movies.FirstOrDefault(m => m.Slug == movieSlug);
                 if (movie != null)

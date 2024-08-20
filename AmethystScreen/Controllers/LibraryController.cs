@@ -224,12 +224,12 @@ namespace AmethystScreen.Controllers
 
             if (isAdded)
             {
-                _logger.LogInformation($"{nameof(AddToWatchList)}: Like added to {movieSlug}");
+                _logger.LogInformation($"{nameof(AddToWatchList)}: added to watchlist {movieSlug}");
                 await _watchListService.AddToList(movieSlug, userId);
             }
             else
             {
-                _logger.LogInformation($"{nameof(AddToWatchList)}: Like removed from {movieSlug}");
+                _logger.LogInformation($"{nameof(AddToWatchList)}: removed from watchlist {movieSlug}");
                 await _watchListService.RemoveFromList(movieSlug, userId);
             }
             return RedirectToAction(nameof(Movie), new { slug = movieSlug });
